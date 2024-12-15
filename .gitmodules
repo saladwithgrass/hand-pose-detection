@@ -1,0 +1,3 @@
+[submodule "handpose3d"]
+	path = handpose3d
+	url = https://github.com/TemugeB/handpose3d
