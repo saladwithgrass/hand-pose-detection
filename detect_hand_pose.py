@@ -3,20 +3,9 @@ from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 import cv2
 import argparse
+from utils.draw_results import load_connections, draw_detection_result
 
-def draw_detection_result(landmarks, image):
-    width, height, _ = image.shape
-    for hand in landmarks:
-        print(hand)
-        for normalized_landmark in hand:
-            landmark_x = int(width*normalized_landmark.x)
-            landmark_y = int(height*normalized_landmark.y)
-            cv2.circle(
-                image, 
-                (landmark_x, landmark_y), 
-                5, 
-                color=(0, 255, 255)
-                )
+
 
 def main():
     print(mp.solutions.hands.HAND_CONNECTIONS)
@@ -33,6 +22,7 @@ def main():
         base_options=base_options(model_asset_path=model_path),
         running_mode=vision_running_mode.IMAGE
     )
+    hierarchy_dict = load_connections('hand_config/hand_connections.json')
     with hand_landmarker.create_from_options(options) as landmarker:
         cap = cv2.VideoCapture(input_path)
 
@@ -44,7 +34,7 @@ def main():
             # detect hand
             mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
             result = landmarker.detect(mp_image)
-            draw_detection_result(result.hand_landmarks, frame)
+            draw_detection_result(frame, result.hand_landmarks, hierarchy_dict)
 
             # resize for displaying
             # frame = cv2.resize(
