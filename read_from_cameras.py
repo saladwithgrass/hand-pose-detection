@@ -13,8 +13,8 @@ def main():
     parser.add_argument('-c1', '--camera1', help='camera 1 id')
     parser.add_argument('-c2', '--camera2', help='camera 2 id')
     args = parser.parse_args()
-    cam1_id = int(args.camera1)
-    cam2_id = int(args.camera2)
+    cam1_id = (args.camera1)
+    cam2_id = (args.camera2)
     model_path = '/home/vix/Documents/bachelor_thesis/hand-pose-detection/hand_landmarker.task'
     base_options = mp.tasks.BaseOptions
     hand_landmarker = mp.tasks.vision.HandLandmarker
@@ -27,8 +27,8 @@ def main():
     hierarchy_dict = load_connections('hand_config/hand_connections.json')
     colors_dict = load_colors('hand_config/hand_colors.json', 'hand_config/hand_connections.json')
     with hand_landmarker.create_from_options(options) as landmarker:
-        cap1 = cv2.VideoCapture(cam1_id)
-        cap2 = cv2.VideoCapture(cam2_id)
+        cap1 = cv2.VideoCapture(cam1_id, cv2.CAP_V4L2)
+        cap2 = cv2.VideoCapture(cam2_id, cv2.CAP_V4L2)
         while (cap1.isOpened() and cap2.isOpened()):
             # Capture frame-by-frame
             ret1, frame1 = cap1.read()

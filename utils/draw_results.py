@@ -56,7 +56,7 @@ def draw_detection_result(image, landmarks, hierarchy_dict, color_dict):
                     pt1=(landmark_x, landmark_y), 
                     pt2=(connection_x, connection_y),
                     color=color_dict[connection_idx],
-                    thickness=1 
+                    thickness=4 
                     )
             cv2.circle(
                 img=image,
