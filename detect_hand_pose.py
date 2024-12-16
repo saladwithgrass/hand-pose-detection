@@ -3,7 +3,7 @@ from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 import cv2
 import argparse
-from utils.draw_results import load_connections, draw_detection_result
+from utils.draw_results import load_connections, load_colors, draw_detection_result
 
 
 
@@ -23,6 +23,7 @@ def main():
         running_mode=vision_running_mode.IMAGE
     )
     hierarchy_dict = load_connections('hand_config/hand_connections.json')
+    colors_dict = load_colors('hand_config/hand_colors.json', 'hand_config/hand_connections.json')
     with hand_landmarker.create_from_options(options) as landmarker:
         cap = cv2.VideoCapture(input_path)
 
@@ -34,7 +35,7 @@ def main():
             # detect hand
             mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
             result = landmarker.detect(mp_image)
-            draw_detection_result(frame, result.hand_landmarks, hierarchy_dict)
+            draw_detection_result(frame, result.hand_landmarks, hierarchy_dict, colors_dict)
 
             # resize for displaying
             # frame = cv2.resize(
@@ -43,7 +44,7 @@ def main():
             #     )
 
             # Display the resulting frame
-            cv2.imshow('Frame', frame)
+            cv2.imshow('Frame', cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
 
             if cv2.waitKey(25) == 27:
                 break

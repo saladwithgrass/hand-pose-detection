@@ -22,7 +22,25 @@ def load_connections(path:str):
         hierarchy_dict[joints[-1]] = []
     return hierarchy_dict
 
-def draw_detection_result(image, landmarks, hierarchy_dict):
+def str_to_color(color_str:str):
+    color_str = color_str.replace('#', '')
+    return (int(color_str[0:2], 16), int(color_str[2:4], 16), int(color_str[4:6], 16))
+
+def load_colors(path_to_colors:str, path_to_connections:str):
+    """
+    Loads colors json as a dict
+    """
+    finger_color_dict = json.load(open(path_to_colors, 'r'))
+    hierarchy_dict = json.load(open(path_to_connections, 'r'))
+    joint_color_dict = {}
+    joint_color_dict[hierarchy_dict['wrist']] = str_to_color(finger_color_dict['wrist'])
+    for finger_name, connections in hierarchy_dict['fingers'].items():
+        for joint_id in connections:
+            joint_color_dict[joint_id] = str_to_color(finger_color_dict[finger_name])
+    return joint_color_dict
+
+
+def draw_detection_result(image, landmarks, hierarchy_dict, color_dict):
     width, height, _ = image.shape
     for hand in landmarks:
         for landmark_id in range(len(hand)):
@@ -38,7 +56,7 @@ def draw_detection_result(image, landmarks, hierarchy_dict):
                     img=image, 
                     pt1=(landmark_x, landmark_y), 
                     pt2=(connection_x, connection_y),
-                    color=(0, 255, 255),
+                    color=color_dict[connection_idx],
                     thickness=1 
                     )
             cv2.circle(
