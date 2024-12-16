@@ -12,6 +12,7 @@ def load_connections(path:str):
     hierarchy_dict = dict()
     hierarchy_dict[wrist_id] = []
     for finger_name, joints in fingers.items():
+        hierarchy_dict[wrist_id].append(joints[0])
         for joint_idx in range(len(joints)-1):
             if joints[joint_idx] in hierarchy_dict.keys():
                 hierarchy_dict[joints[joint_idx]].append(joints[joint_idx + 1])
@@ -22,7 +23,6 @@ def load_connections(path:str):
     return hierarchy_dict
 
 def draw_detection_result(image, landmarks, hierarchy_dict):
-    print(hierarchy_dict)
     width, height, _ = image.shape
     for hand in landmarks:
         for landmark_id in range(len(hand)):
@@ -30,6 +30,17 @@ def draw_detection_result(image, landmarks, hierarchy_dict):
             landmark_connections = hierarchy_dict[landmark_id]
             landmark_x = int(width*cur_landmark.x)
             landmark_y = int(height*cur_landmark.y)
+            for connection_idx in landmark_connections:
+                connection = hand[connection_idx]
+                connection_x = int(connection.x * width)
+                connection_y = int(connection.y * height)
+                cv2.line(
+                    img=image, 
+                    pt1=(landmark_x, landmark_y), 
+                    pt2=(connection_x, connection_y),
+                    color=(0, 255, 255),
+                    thickness=1 
+                    )
             cv2.circle(
                 img=image,
                 center=(landmark_x, landmark_y),
