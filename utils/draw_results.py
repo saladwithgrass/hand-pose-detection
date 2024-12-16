@@ -18,7 +18,6 @@ def load_connections(path:str):
                 hierarchy_dict[joints[joint_idx]].append(joints[joint_idx + 1])
             else:
                 hierarchy_dict[joints[joint_idx]] = [joints[joint_idx + 1]]
-        print(len(joints))
         hierarchy_dict[joints[-1]] = []
     return hierarchy_dict
 
