@@ -1,62 +1,87 @@
 import mediapipe as mp
+import time
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 import cv2
 import argparse
-from utils.draw_results import load_connections, load_colors, draw_detection_result
-
+from utils.draw_results import load_connections, load_colors, draw_detection_result, draw_hand_landmarks_on_live
+import numpy as np
 
 
 def main():
-    print(mp.solutions.hands.HAND_CONNECTIONS)
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c1', '--camera1', help='camera 1 id')
-    parser.add_argument('-c2', '--camera2', help='camera 2 id')
+    parser.add_argument('source_type', help='defines type of input stream: video or camera', choices=('cam', 'vid'))
+    parser.add_argument('sources', help='list of input sources', nargs='+')
+    parser.add_argument('-dev', '--by-dev', help='Specifies whether cameras sould be identified by their file in /dev', required=False, action='store_true')
+    parser.add_argument('-b', '--buffer-size', help='Specifies buffer size for input streams', type=int, default=4)
+    parser.add_argument('-fps', '--framerate', help='Specifies desired framerate', type=int, default=30)
     args = parser.parse_args()
-    cam1_id = (args.camera1)
-    cam2_id = (args.camera2)
+
+    caps = list()
+    buffer_size = args.buffer_size
+    framerate = args.framerate
+    if args.source_type == 'cam':
+        for source in args.sources:
+            if not args.by_dev:
+                source = int(source)
+            cur_cap = cv2.VideoCapture(source, cv2.CAP_V4L2)
+            cur_cap.set(cv2.CAP_PROP_BUFFERSIZE, buffer_size)
+            caps.append(cur_cap)
+    else:
+        for source in args.sources:
+            cur_cap = cv2.VideoCapture(source)
+            cur_cap.set(cv2.CAP_PROP_BUFFERSIZE, buffer_size)
+            caps.append(cur_cap)
+
+    # model setup
     model_path = '/home/vix/Documents/bachelor_thesis/hand-pose-detection/hand_landmarker.task'
     base_options = mp.tasks.BaseOptions
     hand_landmarker = mp.tasks.vision.HandLandmarker
     hand_landmarker_options = mp.tasks.vision.HandLandmarkerOptions
     vision_running_mode = mp.tasks.vision.RunningMode
+    if args.source_type ==  'cam':
+        vision_running_mode = vision_running_mode.LIVE_STREAM
+    else:
+        vision_running_mode = vision_running_mode.VIDEO
     options = hand_landmarker_options(
         base_options=base_options(model_asset_path=model_path),
-        running_mode=vision_running_mode.IMAGE
+        running_mode=vision_running_mode,
+        result_callback=draw_hand_landmarks_on_live
     )
+
+    # load dicts for drawing
     hierarchy_dict = load_connections('hand_config/hand_connections.json')
     colors_dict = load_colors('hand_config/hand_colors.json', 'hand_config/hand_connections.json')
+
+    # set list of constant size
+    rets = [True for _ in caps]
+    print(caps)
     with hand_landmarker.create_from_options(options) as landmarker:
-        cap1 = cv2.VideoCapture(cam1_id, cv2.CAP_V4L2)
-        cap2 = cv2.VideoCapture(cam2_id, cv2.CAP_V4L2)
-        while (cap1.isOpened() and cap2.isOpened()):
-            # Capture frame-by-frame
-            ret1, frame1 = cap1.read()
-            ret2, frame2 = cap2.read()
-            frame1 = cv2.cvtColor(frame1, cv2.COLOR_BGR2RGB)
-            frame2 = cv2.cvtColor(frame2, cv2.COLOR_BGR2RGB)
-
-            # detect hand
-            mp_image1 = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame1)
-            mp_image2 = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame2)
-            result1 = landmarker.detect(mp_image1)
-            result2 = landmarker.detect(mp_image2)
-            draw_detection_result(frame1, result1.hand_landmarks, hierarchy_dict, colors_dict)
-            draw_detection_result(frame2, result2.hand_landmarks, hierarchy_dict, colors_dict)
-            # resize for displaying
-            # frame = cv2.resize(
-            #     frame, (540, 380), fx = 0, fy = 0,
-            #     interpolation = cv2.INTER_CUBIC
-            #     )
-
-            # Display the resulting frame
-            cv2.imshow('Frame1', cv2.cvtColor(frame1, cv2.COLOR_RGB2BGR))
-            cv2.imshow('Frame2', cv2.cvtColor(frame2, cv2.COLOR_RGB2BGR))
-            if cv2.waitKey(25) == 27:
+        
+        while (np.all(rets)):
+            # time measurements to calculate FPS
+            start = time.time()
+            
+            # Capture frames from all sources
+            for source_idx in range(len(caps)):
+                rets[source_idx], cur_frame = caps[source_idx].read() 
+                
+                cur_frame = cv2.cvtColor(cur_frame, cv2.COLOR_BGR2RGB)
+                # detect hand
+                mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=cur_frame)
+                landmarker.detect_async(mp_image, int(time.time()*1000))
+                # result2 = landmarker.detect(mp_image2)
+                # draw_detection_result(cur_frame, result1.hand_landmarks, hierarchy_dict, colors_dict)
+                # Display the resulting frame
+                # cv2.imshow(f'source {source_idx}', cv2.cvtColor(cur_frame, cv2.COLOR_RGB2BGR))
+            
+            end = time.time()
+            print(f'FPS: {1/(end - start)}')
+            if cv2.waitKey(int(1/framerate*1000)) == 27:
                 break
 
-    cap1.release()
-    cap2.release()
+    for cap in caps:
+        cap.release()
     cv2.destroyAllWindows() 
 
 if __name__ == '__main__':
