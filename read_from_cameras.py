@@ -20,7 +20,8 @@ def main():
     caps = list()
     buffer_size = args.buffer_size
     framerate = args.framerate
-    if args.source_type == 'cam':
+    source_type = args.source_type
+    if source_type == 'cam':
         for source in args.sources:
             if not args.by_dev:
                 source = int(source)
@@ -34,20 +35,19 @@ def main():
             caps.append(cur_cap)
 
     # model setup
-    model_path = '/home/vix/Documents/bachelor_thesis/hand-pose-detection/hand_landmarker.task'
+    model_path = 'hand_landmarker.task'
     base_options = mp.tasks.BaseOptions
     hand_landmarker = mp.tasks.vision.HandLandmarker
     hand_landmarker_options = mp.tasks.vision.HandLandmarkerOptions
     vision_running_mode = mp.tasks.vision.RunningMode
-    if args.source_type ==  'cam':
+    if source_type ==  'cam':
         vision_running_mode = vision_running_mode.LIVE_STREAM
     else:
-        vision_running_mode = vision_running_mode.VIDEO
-    options = hand_landmarker_options(
-        base_options=base_options(model_asset_path=model_path),
-        running_mode=vision_running_mode,
-        result_callback=draw_hand_landmarks_on_live
-    )
+        options = hand_landmarker_options(
+            base_options=base_options(model_asset_path=model_path),
+            running_mode=vision_running_mode.VIDEO,
+            num_hands=1
+        )
 
     # load dicts for drawing
     hierarchy_dict = load_connections('hand_config/hand_connections.json')
@@ -57,7 +57,6 @@ def main():
     rets = [True for _ in caps]
     print(caps)
     with hand_landmarker.create_from_options(options) as landmarker:
-        
         while (np.all(rets)):
             # time measurements to calculate FPS
             start = time.time()
@@ -69,7 +68,10 @@ def main():
                 cur_frame = cv2.cvtColor(cur_frame, cv2.COLOR_BGR2RGB)
                 # detect hand
                 mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=cur_frame)
-                landmarker.detect_async(mp_image, int(time.time()*1000))
+                if source_type == 'cam':
+                    landmarker.detect_async(mp_image, int(time.time()*1000))
+                else:
+                    landmarker.detect_for_video(mp_image, int(time.time()*1000))
                 # result2 = landmarker.detect(mp_image2)
                 # draw_detection_result(cur_frame, result1.hand_landmarks, hierarchy_dict, colors_dict)
                 # Display the resulting frame
