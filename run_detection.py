@@ -73,10 +73,10 @@ def main():
             if frames[frame_id] == []:
                 all_ok = False
             cv2.imshow(f'frame {frame_id}', frames[frame_id])
-            if cv2.waitKey(10) == 27:
-                all_ok == False
+            cv2.waitKey(1) 
         
         end_time = time.time() 
         print(f'FPS: {1 / (end_time - start_time)}')
+
 if __name__ == '__main__':
     main()
