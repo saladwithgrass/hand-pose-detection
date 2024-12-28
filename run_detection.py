@@ -92,7 +92,6 @@ def main():
             ret0, frame0 = caps[0].read()
             ret1, frame1 = caps[1].read()
 
-            print(frame0.shape)
             
             # convert colors
             frame0 = cv2.cvtColor(frame0, cv2.COLOR_BGR2RGB)
