@@ -19,12 +19,9 @@ def create_options(type:str):
     vision_running_mode = mp.tasks.vision.RunningMode
     
     # initialize options for correct mode
-    if True:
+    if type == 'cam' or type == 'vid':
         running_mode = vision_running_mode.VIDEO
         callback = None
-    elif False:
-        running_mode = vision_running_mode.LIVE_STREAM
-        callback = draw_hand_landmarks_on_live
     else:
         error('UNKNOWN SOURCE TYPE in create_landmarker. Aborting.')
         exit(1)
@@ -94,6 +91,8 @@ def main():
             # Capture frames from all sources
             ret0, frame0 = caps[0].read()
             ret1, frame1 = caps[1].read()
+
+            print(frame0.shape)
             
             # convert colors
             frame0 = cv2.cvtColor(frame0, cv2.COLOR_BGR2RGB)
