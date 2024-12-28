@@ -73,3 +73,4 @@ class CaptureDetector():
 
     def __del__(self):
         self.landmarker.close()
+        self.cap.release()
