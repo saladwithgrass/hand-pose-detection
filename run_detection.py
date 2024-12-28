@@ -6,7 +6,37 @@ import cv2
 import argparse
 from utils.draw_results import load_connections, load_colors, draw_detection_result, draw_hand_landmarks_on_live
 import numpy as np
+import sys
 
+def error(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
+def create_options(type:str):
+    # model setup
+    model_path = 'hand_landmarker.task'
+    base_options = mp.tasks.BaseOptions
+    hand_landmarker_options = mp.tasks.vision.HandLandmarkerOptions
+    vision_running_mode = mp.tasks.vision.RunningMode
+    
+    # initialize options for correct mode
+    if True:
+        running_mode = vision_running_mode.VIDEO
+        callback = None
+    elif False:
+        running_mode = vision_running_mode.LIVE_STREAM
+        callback = draw_hand_landmarks_on_live
+    else:
+        error('UNKNOWN SOURCE TYPE in create_landmarker. Aborting.')
+        exit(1)
+
+    options = hand_landmarker_options(
+        base_options=base_options(model_asset_path=model_path),
+        running_mode=running_mode,
+        num_hands=1,
+        result_callback=callback
+    )
+    
+    return options
 
 def main():
     parser = argparse.ArgumentParser()
@@ -21,6 +51,7 @@ def main():
     buffer_size = args.buffer_size
     framerate = args.framerate
     source_type = args.source_type
+    print(source_type)
     if source_type == 'cam':
         for source in args.sources:
             if not args.by_dev:
@@ -33,49 +64,57 @@ def main():
             cur_cap = cv2.VideoCapture(source)
             cur_cap.set(cv2.CAP_PROP_BUFFERSIZE, buffer_size)
             caps.append(cur_cap)
-
-    # model setup
-    model_path = 'hand_landmarker.task'
-    base_options = mp.tasks.BaseOptions
-    hand_landmarker = mp.tasks.vision.HandLandmarker
-    hand_landmarker_options = mp.tasks.vision.HandLandmarkerOptions
-    vision_running_mode = mp.tasks.vision.RunningMode
-    if source_type ==  'cam':
-        vision_running_mode = vision_running_mode.LIVE_STREAM
-    else:
-        options = hand_landmarker_options(
-            base_options=base_options(model_asset_path=model_path),
-            running_mode=vision_running_mode.VIDEO,
-            num_hands=1
-        )
-
+    
     # load dicts for drawing
     hierarchy_dict = load_connections('hand_config/hand_connections.json')
     colors_dict = load_colors('hand_config/hand_colors.json', 'hand_config/hand_connections.json')
 
-    # set list of constant size
-    rets = [True for _ in caps]
-    print(caps)
-    with hand_landmarker.create_from_options(options) as landmarker:
-        detect = landmarker.detect_for_video if source_type == 'vid' else landmarker.detect_async
-        while (np.all(rets)):
+
+    # create options for landmarkers 
+    options0 = create_options(source_type)
+    options1 = create_options(source_type)
+    hand_landmarker = mp.tasks.vision.HandLandmarker
+    print(options1.running_mode)
+    with hand_landmarker.create_from_options(options0) as landmarker0,\
+         hand_landmarker.create_from_options(options1) as landmarker1:
+        
+        # create appropriate detect functions
+        detect0 = landmarker0.detect_for_video
+        detect1 = landmarker1.detect_for_video
+        
+        # create return values for stream reading
+        ret0 = ret1 = True
+
+        # run while all sources return something
+        while ret0 and ret1:
+
             # time measurements to calculate FPS
             start = time.time()
             
             # Capture frames from all sources
-            for source_idx in range(len(caps)):
-                rets[source_idx], cur_frame = caps[source_idx].read() 
-                
-                cur_frame = cv2.cvtColor(cur_frame, cv2.COLOR_BGR2RGB)
-                # detect hand
-                mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=cur_frame)
-                cur_time = int(time.time() * 1000)
-                result = detect(mp_image, cur_time)
-                # result2 = landmarker.detect(mp_image2)
-                draw_detection_result(cur_frame, result.hand_landmarks, hierarchy_dict, colors_dict)
-                # Display the resulting frame
-                cv2.imshow(f'source {source_idx}', cv2.cvtColor(cur_frame, cv2.COLOR_RGB2BGR))
+            ret0, frame0 = caps[0].read()
+            ret1, frame1 = caps[1].read()
             
+            # convert colors
+            frame0 = cv2.cvtColor(frame0, cv2.COLOR_BGR2RGB)
+            frame1 = cv2.cvtColor(frame1, cv2.COLOR_BGR2RGB)
+
+            processed_image0 = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame0)
+            processed_image1 = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame1)
+
+            cur_time = int(time.time() * 1000)
+            result0 = detect0(processed_image0, cur_time)
+            result1 = detect1(processed_image1, cur_time)
+            
+            if result0 != None:
+                draw_detection_result(frame0, result0.hand_landmarks, hierarchy_dict, colors_dict)
+                cv2.imshow('frame1', frame0)
+  
+            if result1 != None:
+                draw_detection_result(frame1, result1.hand_landmarks, hierarchy_dict, colors_dict)
+                cv2.imshow('frame2', frame1)
+
+
             end = time.time()
             print(f'FPS: {1/(end - start)}')
             if cv2.waitKey(int(1/framerate*1000)) == 27:
