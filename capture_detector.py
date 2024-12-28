@@ -37,7 +37,7 @@ class CaptureDetector():
         # check if read happened
         if not ret:
             print('OUT OF FRAMES')
-            return None
+            return np.array([])
 
         # convert to rgb
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)

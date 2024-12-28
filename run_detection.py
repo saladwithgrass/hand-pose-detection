@@ -7,33 +7,18 @@ import argparse
 from utils.draw_results import load_connections, load_colors, draw_detection_result, draw_hand_landmarks_on_live
 import numpy as np
 import sys
+from capture_detector import CaptureDetector
+from threading import Thread
 
 def error(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
-def create_options(type:str):
-    # model setup
-    model_path = 'hand_landmarker.task'
-    base_options = mp.tasks.BaseOptions
-    hand_landmarker_options = mp.tasks.vision.HandLandmarkerOptions
-    vision_running_mode = mp.tasks.vision.RunningMode
-    
-    # initialize options for correct mode
-    if type == 'cam' or type == 'vid':
-        running_mode = vision_running_mode.VIDEO
-        callback = None
-    else:
-        error('UNKNOWN SOURCE TYPE in create_landmarker. Aborting.')
-        exit(1)
-
-    options = hand_landmarker_options(
-        base_options=base_options(model_asset_path=model_path),
-        running_mode=running_mode,
-        num_hands=1,
-        result_callback=callback
-    )
-    
-    return options
+def run_detector_frame_processing(
+        detector:CaptureDetector, 
+        detector_id:int, 
+        result:list
+        ):
+    result[detector_id] = detector.process_one_frame()
 
 def main():
     parser = argparse.ArgumentParser()
@@ -61,67 +46,37 @@ def main():
             cur_cap = cv2.VideoCapture(source)
             cur_cap.set(cv2.CAP_PROP_BUFFERSIZE, buffer_size)
             caps.append(cur_cap)
-    
-    # load dicts for drawing
-    hierarchy_dict = load_connections('hand_config/hand_connections.json')
-    colors_dict = load_colors('hand_config/hand_colors.json', 'hand_config/hand_connections.json')
 
+    model_path = 'hand_landmarker.task'
 
-    # create options for landmarkers 
-    options0 = create_options(source_type)
-    options1 = create_options(source_type)
-    hand_landmarker = mp.tasks.vision.HandLandmarker
-    print(options1.running_mode)
-    with hand_landmarker.create_from_options(options0) as landmarker0,\
-         hand_landmarker.create_from_options(options1) as landmarker1:
-        
-        # create appropriate detect functions
-        detect0 = landmarker0.detect_for_video
-        detect1 = landmarker1.detect_for_video
-        
-        # create return values for stream reading
-        ret0 = ret1 = True
-
-        # run while all sources return something
-        while ret0 and ret1:
-
-            # time measurements to calculate FPS
-            start = time.time()
-            
-            # Capture frames from all sources
-            ret0, frame0 = caps[0].read()
-            ret1, frame1 = caps[1].read()
-
-            print(frame0.shape)
-            
-            # convert colors
-            frame0 = cv2.cvtColor(frame0, cv2.COLOR_BGR2RGB)
-            frame1 = cv2.cvtColor(frame1, cv2.COLOR_BGR2RGB)
-
-            processed_image0 = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame0)
-            processed_image1 = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame1)
-
-            cur_time = int(time.time() * 1000)
-            result0 = detect0(processed_image0, cur_time)
-            result1 = detect1(processed_image1, cur_time)
-            
-            if result0 != None:
-                draw_detection_result(frame0, result0.hand_landmarks, hierarchy_dict, colors_dict)
-                cv2.imshow('frame1', frame0)
-  
-            if result1 != None:
-                draw_detection_result(frame1, result1.hand_landmarks, hierarchy_dict, colors_dict)
-                cv2.imshow('frame2', frame1)
-
-
-            end = time.time()
-            print(f'FPS: {1/(end - start)}')
-            if cv2.waitKey(int(1/framerate*1000)) == 27:
-                break
-
+    # create detectors
+    detectors = list()
     for cap in caps:
-        cap.release()
-    cv2.destroyAllWindows() 
+        detectors.append(CaptureDetector(model_path=model_path, capture=cap))
 
+    threads = [None] * len(detectors)    
+    frames = [None] * len(detectors)
+    all_ok:bool = True
+    while all_ok:
+        start_time = time.time() 
+        for detector_id in range(len(detectors)):
+            threads[detector_id] = Thread(
+                target=run_detector_frame_processing,
+                args=(detectors[detector_id], detector_id, frames)
+                )
+            threads[detector_id].start()
+
+        for thread in threads:
+            thread.join()
+    
+        for frame_id in range(len(frames)):
+            if frames[frame_id] == []:
+                all_ok = False
+            cv2.imshow(f'frame {frame_id}', frames[frame_id])
+            if cv2.waitKey(10) == 27:
+                all_ok == False
+        
+        end_time = time.time() 
+        print(f'FPS: {1 / (end_time - start_time)}')
 if __name__ == '__main__':
     main()
