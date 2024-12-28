@@ -53,7 +53,6 @@ def draw_hand_landmarks_on_live(detection_result, rgb_image, _):
 
 def draw_detection_result(image, landmarks, hierarchy_dict, color_dict):
     height, width, _ = image.shape
-    print(width, " ", height)
     for hand in landmarks:
         for landmark_id in range(len(hand)):
             cur_landmark = hand[landmark_id]
