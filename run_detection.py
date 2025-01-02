@@ -47,6 +47,7 @@ def main():
     caps = list()
     buffer_size = args.buffer_size
     framerate = args.framerate
+    ideal_delta_t_ms = 1 / framerate * 1000
     source_type = args.source_type
     print(source_type)
     if source_type == 'cam':
@@ -112,10 +113,11 @@ def main():
                 draw_detection_result(frame1, result1.hand_landmarks, hierarchy_dict, colors_dict)
                 cv2.imshow('frame2', frame1)
 
-
             end = time.time()
-            print(f'FPS: {1/(end - start)}')
-            if cv2.waitKey(int(1/framerate*1000)) == 27:
+            real_delta_t_seconds = end - start
+            print(f'FPS: {1 / real_delta_t_seconds}')
+            time_to_wait = max(int(ideal_delta_t_ms - real_delta_t_seconds * 1000), 60)
+            if cv2.waitKey(time_to_wait) == 27: #cv2.waitKey(int(1/framerate*1000)) == 27:
                 break
 
     for cap in caps:
