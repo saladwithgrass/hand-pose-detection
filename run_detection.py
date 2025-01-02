@@ -115,10 +115,11 @@ def main():
 
             end = time.time()
             real_delta_t_seconds = end - start
-            print(f'FPS: {1 / real_delta_t_seconds}')
-            time_to_wait = max(int(ideal_delta_t_ms - real_delta_t_seconds * 1000), 60)
+            time_to_wait = max(int(ideal_delta_t_ms - real_delta_t_seconds * 1000), 10)
             if cv2.waitKey(time_to_wait) == 27: #cv2.waitKey(int(1/framerate*1000)) == 27:
                 break
+            end = time.time()
+            print(f'FPS: {1 / (end - start)}')
 
     for cap in caps:
         cap.release()
