@@ -58,6 +58,8 @@ def main():
     # create empty arrays to store
     object_points = []
     image_points = []
+
+    frame_counter = 0
     while True:
         # capture frame
         ret, frame = cap.read()
@@ -68,25 +70,22 @@ def main():
         
         # detect aruco
         detected_corners, ids = detect_aruco_in_image(frame, aruco_detector_parameters, aruco_dictionary)
-        if detected_corners.size <= 0: 
-            # draw empty detection
-            cv2.imshow('detection', frame)
-            if cv2.waitKey(10) == 27:
-                break
-            else:
-                continue
-        
-        # add points to calibration arrays
-        object_points.append(aruco_points)
-        # important. reshape detected corners from (1, 4, 2) to (4, 2)
-        image_points.append(detected_corners.reshape((4, 2)))
+        if detected_corners.size > 0: 
+            # draw detection if it exists
+            cv2.aruco.drawDetectedMarkers(frame, detected_corners, ids, borderColor=(255, 0, 255))
 
-        # draw detected aruco
-        cv2.aruco.drawDetectedMarkers(frame, detected_corners, ids, borderColor=(255, 0, 255))
-
-        # show frame 
+        # show detection
         cv2.imshow('detection', frame)
-        if cv2.waitKey(10) == 27:
+
+        key = cv2.waitKey(10)
+        if key == ord('c'):
+            frame_counter += 1
+            print(f'frames captured: {frame_counter}')
+            # add points to calibration arrays
+            object_points.append(aruco_points)
+            # important. reshape detected corners from (1, 4, 2) to (4, 2)
+            image_points.append(detected_corners.reshape((4, 2)))
+        elif key == ord('q'):
             break
 
 
