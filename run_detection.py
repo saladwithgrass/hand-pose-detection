@@ -32,7 +32,7 @@ def main():
     caps = list()
     buffer_size = args.buffer_size
     framerate = args.framerate
-    ideal_delta_t_ms = 1 / framerate * 1000
+    ideal_delta_t_ms = int(1 / framerate * 1000)
     source_type = args.source_type
     print(source_type)
     if source_type == 'cam':
@@ -81,12 +81,18 @@ def main():
 
         # show results for each input
         for frame_id in range(len(captured_frames)):
-            if captured_frames[frame_id] == []:
+            if len(captured_frames[frame_id]) == 0:
                 all_ok = False
             cv2.imshow(f'frame {frame_id}', captured_frames[frame_id])
 
         # wait to sync fps
-        cv2.waitKey(ideal_delta_t_ms)    
+        end_time = time.time()
+        real_delta_t_ms = int((end_time - start_time) * 1000)
+        cv2.waitKey(
+            max(
+                ideal_delta_t_ms - real_delta_t_ms,
+                1
+                ))
 
         # print FPS 
         end_time = time.time() 

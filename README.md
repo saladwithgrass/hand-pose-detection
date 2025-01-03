@@ -1,3 +1,7 @@
+# IMPORTANT
+If you use wayland, be wary of opencv being somewhat fucky. In my case it was fixed with 
+`$ export QT_QPA_PLATFORM=xcb`
+
 # Pose Detection Module
 
 For now this module is just for detection, but when i figure it out, i'm going to add conversion to gripper here.
