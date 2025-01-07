@@ -27,3 +27,8 @@ The main thread will be just a `while True:` loop that waits for completion on b
 I have to calibrate cameras with a chessboard, i think i will use ChArUco.
 From calibration i will get `rvecs` and `tvec` which are elements of homogenous transforms.
 From there it should be relatively smooth sailing. 
+
+Cameras have been calibrated. I marked them L and R. Left has a small error of about 0.24, while the right one has around 0.47. 
+Maybe i'll recalibrate them, since my tech for calibration is anything but precise.
+
+Now, i should try getting rvec and tvec and then determining the of an object.
