@@ -23,7 +23,7 @@ I think i should separate detection, so that there are not two of everything for
 By running a program, I will spawn two detection processes.
 The main thread will be just a `while True:` loop that waits for completion on both those processes. Once both results are not None, draw them.
 
-## Task 4: Calibrate Cameras 
+## ~~Task 4: Calibrate Cameras~~
 I have to calibrate cameras with a chessboard, i think i will use ChArUco.
 From calibration i will get `rvecs` and `tvec` which are elements of homogenous transforms.
 From there it should be relatively smooth sailing. 
@@ -32,3 +32,13 @@ Cameras have been calibrated. I marked them L and R. Left has a small error of a
 Maybe i'll recalibrate them, since my tech for calibration is anything but precise.
 
 Now, i should try getting rvec and tvec and then determining the of an object.
+
+Also, above i made a mistake of saying that i will get `rvecs` and `tvecs` from calibration. No. From calibration i only get camera data.
+It can be used then to determine `rvec` and `tvec` more precisely. 
+
+## Task 5: 3d graphics
+Now, i want to triangulate the position of an object with cameras.
+I don't have anything precise in 3d space on my hands right now.
+What i will do is display and point in 3d and look at its movement and try verifying if at least its quality is correct.
+Any other precision will come from better calibration and better calibration comes from better equipment. 
+As of now, i have to figure out how to draw a point on a 3d plot.
