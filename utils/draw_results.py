@@ -46,8 +46,6 @@ def load_colors(path_to_colors:str, path_to_connections:str):
             joint_color_dict[joint_id] = str_to_color(finger_color_dict[finger_name])
     return joint_color_dict
 
-
-
 def draw_hand_landmarks_on_live(detection_result, rgb_image, _):
     cv2.imshow('huh', rgb_image.numpy_view())
 
