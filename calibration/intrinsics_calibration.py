@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import argparse
 import pickle
+from calibration_utils import create_charuco_from_json
 
 def main():
     parser = argparse.ArgumentParser()
@@ -9,21 +10,8 @@ def main():
     args = parser.parse_args()
     cam_id = args.cam_id
 
-    # board parameters
-    CHARUCO_BOARD_ROWS = 8
-    CHARUCO_BOARD_COLS = 11
-    CHARUCO_SQUARE_SIZE = 23  # mm
-    CHARUCO_MARKER_SIZE = 17
-    ARUCO_DICTIONARY = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_100)
-
-
-    # create board
-    charuco_board = cv2.aruco.CharucoBoard(
-        size=(CHARUCO_BOARD_COLS, CHARUCO_BOARD_ROWS),
-        squareLength=CHARUCO_SQUARE_SIZE,
-        markerLength=CHARUCO_MARKER_SIZE,
-        dictionary=ARUCO_DICTIONARY
-    )
+    # create charuco from default parameters
+    charuco_board = create_charuco_from_json()
 
     # create detector
     detector = cv2.aruco.CharucoDetector(
