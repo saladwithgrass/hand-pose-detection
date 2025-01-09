@@ -60,6 +60,17 @@ def main():
         if ret:
             print('rvec: ', rvec)
             print('tvec: ', tvec)
+            cv2.drawFrameAxes(
+                image=frame,
+                cameraMatrix=camera_matrix,
+                distCoeffs=dist_coeffs,
+                rvec=rvec,
+                tvec=tvec,
+                length=100,
+                thickness=10
+            )
+        cv2.imshow('huh', frame)
+        cv2.waitKey(10)
 
 
 if __name__ == '__main__':
