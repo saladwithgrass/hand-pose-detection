@@ -17,4 +17,4 @@ class HandDrawer():
         zs = joint_coordinates[::, 2]
 
         # plot points
-        self.ax.plot()
+        self.ax.plot(xs=xs, ys=ys, zs=zs, marker='o')
