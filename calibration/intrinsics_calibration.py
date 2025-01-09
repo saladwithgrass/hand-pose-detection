@@ -3,6 +3,7 @@ import numpy as np
 import argparse
 import pickle
 from calibration_utils import create_charuco_from_json
+from ..utils.camera_opener import create_capture_from_json
 
 def main():
     parser = argparse.ArgumentParser()
@@ -10,6 +11,7 @@ def main():
     parser.add_argument('-ne', '--no-error-name', help='Prevents error from being added to the name of ouput.', action='store_true')
     parser.add_argument('-nf', '--no-frames-name', help='Prevents number of frames from being added to the name of output', action='store_true')
     parser.add_argument('-o', '--output', help='Path to output file', default = None)
+    parser.add_argument('-cj', '--capture_json', help='Path to json with capture parameters', default='../camera_parameters.json')
     args = parser.parse_args()
     cam_id = args.cam_id
 
@@ -33,6 +35,8 @@ def main():
     cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+    
+    cap = create_capture_from_json(cam_id, args.capture_json)
 
     image_size = None
 
@@ -96,7 +100,7 @@ def main():
     # Release camera and close window
     cap.release()
     cv2.destroyAllWindows()
-    
+
     # calibrate camera with collected data
     print('starting calibration...', flush=True)
     precision, camera_matrix, dist_coeffs, _, _ = cv2.calibrateCamera(
