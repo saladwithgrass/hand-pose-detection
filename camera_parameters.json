@@ -1,5 +1,10 @@
 {
     "CAP_PROP_FRAME_WIDTH" : 1920,
     "CAP_PROP_FRAME_HEIGHT" : 1080,
-    "CAP_PROP_FOURCC" : "MJPG"
+    "CAP_PROP_FOURCC" : [
+        "M",
+        "J",
+        "P",
+        "G"
+    ]
 }
