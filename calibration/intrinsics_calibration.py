@@ -2,11 +2,11 @@ import cv2
 import numpy as np
 import argparse
 import pickle
-from calibration_utils import create_charuco_from_json
 
 import sys
 sys.path.append('../')
 from utils.capture_opener import create_capture_from_json
+from utils.calibration_utils import create_charuco_from_json
 
 def main():
     parser = argparse.ArgumentParser()

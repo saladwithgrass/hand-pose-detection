@@ -2,11 +2,11 @@ import cv2
 import pickle 
 import argparse
 import cv2.aruco as aruco
-from calibration_utils import create_charuco_from_json
 
 import sys
 sys.path.append('../')
 from utils.capture_opener import create_capture_from_json
+from utils.calibration_utils import create_charuco_from_json
 
 def main():
     parser = argparse.ArgumentParser()
