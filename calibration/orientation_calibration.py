@@ -4,6 +4,10 @@ import argparse
 import cv2.aruco as aruco
 from calibration_utils import create_charuco_from_json
 
+import sys
+sys.path.append('../')
+from utils.capture_opener import create_capture_from_json
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('cam_id', help='camera device id /dev/vid*', type=int)
@@ -25,7 +29,7 @@ def main():
 
     # open camera capture
     cam_id = args.cam_id
-    cap = cv2.VideoCapture(cam_id)
+    cap = create_capture_from_json(cam_id, '../config/capture_params.json')
     
     # read frame by frame
     while True:

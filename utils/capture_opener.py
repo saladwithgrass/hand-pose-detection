@@ -12,6 +12,6 @@ def create_capture_from_json(dev_id:int, json_path:str) -> cv2.VideoCapture:
             fcc_code = cv2.VideoWriter.fourcc(value[0], value[1], value[2], value[3])
             cap.set(cv2.CAP_PROP_FOURCC, fcc_code)
             continue
-        cap.set(getattr(name), value)
+        cap.set(getattr(cv2, name), value)
     return cap
     
