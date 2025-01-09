@@ -36,9 +36,16 @@ Now, i should try getting rvec and tvec and then determining the of an object.
 Also, above i made a mistake of saying that i will get `rvecs` and `tvecs` from calibration. No. From calibration i only get camera data.
 It can be used then to determine `rvec` and `tvec` more precisely. 
 
-## Task 5: 3d graphics
+## ~~Task 5: 3d graphics~~
 Now, i want to triangulate the position of an object with cameras.
 I don't have anything precise in 3d space on my hands right now.
 What i will do is display and point in 3d and look at its movement and try verifying if at least its quality is correct.
 Any other precision will come from better calibration and better calibration comes from better equipment. 
 As of now, i have to figure out how to draw a point on a 3d plot.
+I have a class that updates it's plot with point coordinates
+
+## Task 6: Triangulation
+For start i will try to track the position of charuco board and see where it gets me.
+1) Do it with one camera and see how well it tracks it
+2) Triangulate Charuco board with two cameras
+3) Triangulate hand

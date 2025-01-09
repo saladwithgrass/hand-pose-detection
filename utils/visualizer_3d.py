@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-class HandDrawer():
+class Visualiser3D():
     
     def __init__(self):
         self.fig = plt.figure()
