@@ -65,8 +65,6 @@ def main():
             # x - red
             # y - green
             # z - blue
-            print('rvec: ', rvec)
-            print('tvec: ', tvec)
             cv2.drawFrameAxes(
                 image=frame,
                 cameraMatrix=camera_matrix,
