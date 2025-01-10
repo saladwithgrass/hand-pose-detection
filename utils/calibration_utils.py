@@ -32,4 +32,5 @@ def create_charuco_from_json(json_path:str='charuco_parameters.json') -> cv2.aru
         markerLength=CHARUCO_MARKER_SIZE,
         dictionary=ARUCO_DICTIONARY
     )
+    charuco_board.setLegacyPattern(True)
     return charuco_board
