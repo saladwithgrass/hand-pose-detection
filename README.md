@@ -46,6 +46,15 @@ I have a class that updates it's plot with point coordinates
 
 ## Task 6: Triangulation
 For start i will try to track the position of charuco board and see where it gets me.
-1) Do it with one camera and see how well it tracks it
+1) Do it with one camera and see how well it tracks it.
+
+    It is VERY slow, but i was able to track an aruco marker
+
 2) Triangulate Charuco board with two cameras
+
+    This step needs reworking:
+        
+        1) Simultaneously calibrate two cameras to determine their relative orientation. 
+        2) Draw them and verify that everything is okay.
+        3) Triangulate a marker and draw it in relation to cameras
 3) Triangulate hand
