@@ -83,7 +83,7 @@ def main():
             break
 
         # if told to capture a frame, capture it
-        if charuco_corners is not None and len(charuco_corners) > 8:
+        if charuco_corners is not None and len(charuco_corners) > 11:
             cur_object_points, cur_image_points = charuco_board.matchImagePoints(charuco_corners, charuco_ids)
             if len(cur_object_points) == 0 or len(cur_image_points) == 0:
                 print('matching points failed. you should retry')
