@@ -62,6 +62,9 @@ def main():
             tvec=None
         )
         if ret:
+            # x - red
+            # y - green
+            # z - blue
             print('rvec: ', rvec)
             print('tvec: ', tvec)
             cv2.drawFrameAxes(
@@ -73,7 +76,9 @@ def main():
                 length=100,
                 thickness=10
             )
-        cv2.imshow('huh', frame)
+
+        scale = 0.4
+        cv2.imshow('huh', cv2.resize(frame, dsize=(None), fx=scale, fy=scale))
         cv2.waitKey(10)
 
 
