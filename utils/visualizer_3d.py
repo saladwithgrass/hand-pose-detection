@@ -6,6 +6,15 @@ class Visualizer3D():
     def __init__(self):
         self.fig = plt.figure()
         self.ax = self.fig.add_subplot(111, projection='3d')
+        self.ax.set_xlabel('X')
+        self.ax.set_ylabel('Y')
+        self.ax.set_zlabel('Z')
+
+        self.MAX_DIM = 500
+
+        self.ax.set_xlim3d([-self.MAX_DIM, self.MAX_DIM])
+        self.ax.set_ylim3d([-self.MAX_DIM, self.MAX_DIM])
+        self.ax.set_zlim3d([-self.MAX_DIM, self.MAX_DIM])
     
     def update_points(self, joint_coordinates):
         """
@@ -24,4 +33,10 @@ class Visualizer3D():
 
         # plot points
         self.ax.plot(xs=xs, ys=ys, zs=zs, marker='o')
-        plt.pause(0.01)
+        self.ax.set_xlabel('X')
+        self.ax.set_ylabel('Y')
+        self.ax.set_zlabel('Z')
+        self.ax.set_xlim3d([-self.MAX_DIM, self.MAX_DIM])
+        self.ax.set_ylim3d([-self.MAX_DIM, self.MAX_DIM])
+        self.ax.set_zlim3d([-self.MAX_DIM, self.MAX_DIM])
+        plt.pause(0.001)
