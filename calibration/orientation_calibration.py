@@ -18,12 +18,19 @@ def main():
                         nargs='+', 
                         type=int)
 
-    parser.add_argument('intrinsics_files', 
+    parser.add_argument('-if', '--intrinsics_files', 
                         help='path to .pkl file with data from intrinsics calibration. Must correspond to cam_ids', 
-                        nargs='+'
+                        nargs='+',
+                        required=True
                         )
+    parser.add_argument('-o', '--output', help='Path to output file.', type=str, default='orientation')
+    parser.add_argument('-s', '--separate', help='If set, stores cameras orientations in separate files.', action='store_true')
     args = parser.parse_args()
-
+    if len(args.cam_ids) != len(args.intrinsics_files):
+        print('Amount of input devices and intrinsics file must match. Aborting')
+        return
+    
+    cam_ids = args.cam_ids
     # create charuco board from default parameters
     charuco_board = create_charuco_from_json()
 
@@ -42,12 +49,14 @@ def main():
 
     # open camera capture
     caps = list()
-    for cam_id in args.cam_ids:
+    for cam_id in cam_ids:
         caps.append(create_capture_from_json(cam_id, '../config/capture_params.json'))
     
     # read frame by frame
     captured_frames = [None] * len(caps)
     all_ok:bool = True
+    cam_rvecs = [None] * len(caps)
+    cam_tvecs = [None] * len(caps)
     while all_ok:
         idx = 0
         for cap in caps:
@@ -83,6 +92,8 @@ def main():
                 # x - red
                 # y - green
                 # z - blue
+                cam_rvecs[idx] = rvec
+                cam_tvecs[idx] = tvec
                 cv2.drawFrameAxes(
                     image=frame,
                     cameraMatrix=cam_matrices[idx],
@@ -94,9 +105,41 @@ def main():
                 )
 
             scale = 0.3
-            cv2.imshow('huh', cv2.resize(frame, dsize=(None), fx=scale, fy=scale))
+            cv2.imshow(f'huh_{idx}', cv2.resize(frame, dsize=(None), fx=scale, fy=scale))
             idx += 1
-        cv2.waitKey(1)
+        key = cv2.waitKey(1)
+        if key == 27:
+            break
+        elif key == ord('c'):
+            print('Saving data for cameras', end='')
+            if args.separate:
+                print(' separately.')
+                prefix = args.output
+                prefix.removesuffix('.pkl')
+                for idx in range(len(cam_ids)):
+                    cur_name = prefix + f'_{cam_ids[idx]}.pkl'
+                    data_struct = {
+                        'rvec' : cam_rvecs[idx],
+                        'tvec' : cam_tvecs[idx],
+                        'cam_id' : cam_ids[idx]
+                    }
+                    with open(cur_name, 'wb') as output:
+                        pickle.dump(data_struct, output)
+            else:
+                print(' in one file.')
+                data_struct = {
+                    'rvecs' : cam_rvecs,
+                    'tvecs' : cam_tvecs,
+                    'cam_ids' : cam_ids
+                }
+                output_name = args.output
+                output_name.removesuffix('pkl')
+                output_name = output_name + '.pkl'
+                with open(output_name, 'wb') as output:
+                    pickle.dump(data_struct, output)
+                print(f'Saved to {output_name}')
+                return
+                        
 
 
 if __name__ == '__main__':
