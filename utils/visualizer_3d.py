@@ -16,7 +16,7 @@ class Visualizer3D():
         self.ax.set_ylim3d([-self.MAX_DIM, self.MAX_DIM])
         self.ax.set_zlim3d([-self.MAX_DIM, self.MAX_DIM])
     
-    def update_points(self, joint_coordinates):
+    def update_points(self, joint_coordinates, pause = 0.001):
         """
         Takes and array of 3d vectors with point coordinates.
         Updates plot.
@@ -26,7 +26,7 @@ class Visualizer3D():
         self.ax.cla()
 
         # convert points 
-        joint_coordinates = np.array(joint_coordinates).T[0]
+        joint_coordinates = np.array(joint_coordinates).T
         xs = joint_coordinates[0]
         ys = joint_coordinates[1]
         zs = joint_coordinates[2]
@@ -39,4 +39,4 @@ class Visualizer3D():
         self.ax.set_xlim3d([-self.MAX_DIM, self.MAX_DIM])
         self.ax.set_ylim3d([-self.MAX_DIM, self.MAX_DIM])
         self.ax.set_zlim3d([-self.MAX_DIM, self.MAX_DIM])
-        plt.pause(0.001)
+        plt.pause(pause)

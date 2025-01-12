@@ -7,6 +7,9 @@ import sys
 sys.path.append('../')
 from utils.visualizer_3d import Visualizer3D
 
+def get_camera_coordinates(u:float, v:float):
+    pass
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-co', '--cameras-orientation', \
