@@ -106,7 +106,7 @@ def main():
                 )
 
             scale = 0.3
-            cv2.imshow(f'huh_{idx}', cv2.resize(frame, dsize=(None), fx=scale, fy=scale))
+            cv2.imshow(f'camera:{cam_ids[idx]}', cv2.resize(frame, dsize=(None), fx=scale, fy=scale))
             idx += 1
         key = cv2.waitKey(1)
         if key == 27:
