@@ -57,4 +57,12 @@ For start i will try to track the position of charuco board and see where it get
         1) Simultaneously calibrate two cameras to determine their relative orientation. 
         2) Draw them and verify that everything is okay.
         3) Triangulate a marker and draw it in relation to cameras
+
+    Okay, a lot of details occured to me.
+    I researched the DLT algorithm that is used to triangulate in 3D and wrote.
+    It seems to run, but it does not work properly. Main suspicion is on the incorrect usage of rvecs and tvecs for determining world position.
+    Steps were updated:
+
+        1) Calibrate two cameras and extract rvecs and tvecs in their correct form
+        2) Try to triangulate the world origin. 
 3) Triangulate hand
