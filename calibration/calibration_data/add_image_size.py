@@ -3,7 +3,7 @@ import pickle
 
 import sys
 sys.path.append('../../')
-from utils.confirmation import confirmation_prompt
+from utils.general_utils import confirmation_prompt
 
 def main():
     parser = argparse.ArgumentParser(add_help=False)

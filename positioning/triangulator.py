@@ -4,7 +4,7 @@ import pickle
 
 import sys
 sys.path.append('../')
-from utils.capture_opener import create_capture_from_json
+from utils.file_utils import create_capture_from_json
 
 class CameraTriangulator():
 

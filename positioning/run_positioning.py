@@ -8,10 +8,10 @@ import numpy as np
 import sys
 sys.path.append('../')
 from utils.visualizer_3d import Visualizer3D 
-from utils.capture_opener import create_capture_from_json
+from utils.file_utils import create_capture_from_json
 
 # to be removed later !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-from utils.calibration_utils import create_charuco_from_json
+from utils.file_utils import create_charuco_from_json
 
 def main():
     parser = argparse.ArgumentParser()
@@ -37,13 +37,6 @@ def main():
             intr_dict = pickle.load(intr_file)
             cam_matrices.append(intr_dict['camera_matrix'])
             dist_coeffs.append(intr_dict['dist_coeffs'])
-            new_cam_matrix, roi = cv2.getOptimalNewCameraMatrix(
-                cameraMatrix=cam_matrices[-1], 
-                distCoeffs=dist_coeffs[-1],
-                imageSize=(1920, 1080)
-                )
-            new_cam_matrices.append(new_cam_matrix)
-            rois.append(roi)
 
     # create visualizer
     visualizer = Visualizer3D()
