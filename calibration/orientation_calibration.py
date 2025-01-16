@@ -11,6 +11,9 @@ from utils.file_utils import (
     create_charuco_from_json
     )
 
+def click_callback(event, x, y, flags, param):
+    if event == cv2.EVENT_LBUTTONDOWN:
+        print(f'Clicked on (x, y): ({x}, {y})')
 
 def main():
     parser = argparse.ArgumentParser()
@@ -26,7 +29,11 @@ def main():
                         )
     parser.add_argument('-o', '--output', help='Path to output file.', type=str, default='orientation')
     parser.add_argument('-s', '--separate', help='If set, stores cameras orientations in separate files.', action='store_true')
+    parser.add_argument('-ds', '--display-scale', help='How shows how much images from cameras will be scaled down when displayed.', type=float, default=0.4)
     args = parser.parse_args()
+
+    scale = args.display_scale
+
     if len(args.cam_ids) != len(args.intrinsics_files):
         print('Amount of input devices and intrinsics file must match. Aborting')
         return
@@ -105,12 +112,15 @@ def main():
                     thickness=10
                 )
 
-            scale = 0.3
-            cv2.imshow(f'camera:{cam_ids[idx]}', cv2.resize(frame, dsize=(None), fx=scale, fy=scale))
+            cur_window_name = f'camera:{cam_ids[idx]}'
+            cv2.imshow(cur_window_name, cv2.resize(frame, dsize=(None), fx=scale, fy=scale))
+            cv2.setMouseCallback(cur_window_name, click_callback)
             idx += 1
         key = cv2.waitKey(1)
         if key == 27:
             break
+        elif key == ord('a'):
+            pass
         elif key == ord('c'):
             print('Saving data for cameras', end='')
             if args.separate:
