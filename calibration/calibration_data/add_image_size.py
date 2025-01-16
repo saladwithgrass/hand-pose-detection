@@ -31,7 +31,7 @@ def main():
     
     # reopen file wor write
     with open(input_filename, 'wb') as output_file:
-        pickle.dump(camera_dict)
+        pickle.dump(camera_dict, output_file)
     
 
 
