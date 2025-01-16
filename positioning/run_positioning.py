@@ -15,16 +15,36 @@ from utils.calibration_utils import create_charuco_from_json
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('cam_id', help='Device id of camera to capture.', type=int)
+    parser.add_argument('cam_ids', help='Device id of camera to capture.', type=int, nargs=2)
     parser.add_argument('-cj', '--capture_json', help='Path to json with capture parameters', default='../config/capture_params.json')
-    parser.add_argument('-ci', '--camera-intrinsics', help='Path to .pkl file with camera intrinsic parameters.', required=True)
+    parser.add_argument('-ci', '--camera-intrinsics', help='Path to .pkl file with camera intrinsic parameters.', required=True, nargs=2)
 
     args = parser.parse_args()
-    cam_id = args.cam_id
+    cam_ids = args.cam_ids
 
     # create capture
-    cap = create_capture_from_json(cam_id, args.capture_json)
+    caps = []
+    for cam_id in cam_ids:
+        caps.append(create_capture_from_json(cam_id, args.capture_json))
     
+    # import camera intrinsics
+    cam_matrices = []
+    dist_coeffs = []
+    new_cam_matrices = []
+    rois = []
+    for intr_filename in args.camera_intrinsics:
+        with open(intr_filename, 'rb') as intr_file:
+            intr_dict = pickle.load(intr_file)
+            cam_matrices.append(intr_dict['camera_matrix'])
+            dist_coeffs.append(intr_dict['dist_coeffs'])
+            new_cam_matrix, roi = cv2.getOptimalNewCameraMatrix(
+                cameraMatrix=cam_matrices[-1], 
+                distCoeffs=dist_coeffs[-1],
+                imageSize=(1920, 1080)
+                )
+            new_cam_matrices.append(new_cam_matrix)
+            rois.append(roi)
+
     # create visualizer
     visualizer = Visualizer3D()
 
@@ -39,11 +59,6 @@ def main():
     objPoints[2] = [marker_length/2., -marker_length/2.,  0]
     objPoints[3] = [-marker_length/2., -marker_length/2., 0]
 
-    # import camera intrinsics
-    with open(args.camera_intrinsics, 'rb') as intr_file:
-        intr_dict = pickle.load(intr_file)
-        camera_matrix = intr_dict['camera_matrix']
-        dist_coeffs = intr_dict['dist_coeffs']
 
     # read frame by frame
     while True:
