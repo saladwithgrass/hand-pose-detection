@@ -7,23 +7,6 @@ import sys
 sys.path.append('../')
 from utils.visualizer_3d import Visualizer3D
 
-class CameraPositioner():
-
-    def __init__(self, 
-                    captures:list[cv2.VideoCapture],
-                    camera_matrices:list[np.ndarray],
-                    distortion_coefficients:list[np.ndarray],
-                    cameras_rvecs:list[np.ndarray],
-                    cameras_tvecs:list[np.ndarray]
-                ):
-        self.caps = captures
-        self.camera_matrices = camera_matrices
-        self.dist_coeffs = distortion_coefficients
-        self.rvecs = cameras_rvecs
-        self.tvecs = cameras_tvecs
-
-
-
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-co', '--cameras-orientation', \
