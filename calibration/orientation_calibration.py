@@ -111,7 +111,6 @@ def main():
                     length=100,
                     thickness=10
                 )
-
             cur_window_name = f'camera:{cam_ids[idx]}'
             cv2.imshow(cur_window_name, cv2.resize(frame, dsize=(None), fx=scale, fy=scale))
             cv2.setMouseCallback(cur_window_name, click_callback)

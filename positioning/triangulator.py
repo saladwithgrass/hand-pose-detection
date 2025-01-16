@@ -49,7 +49,14 @@ class CameraTriangulator():
             self.projection_matrices.append(self.create_projection_matrix(rvec, tvec, cam_matrix))
 
     def create_projection_matrix(self, rvec, tvec, cam_matrix):
+        print('rvec:')
+        print(cv2.Rodrigues(rvec)[0])
+        print('tvec:')
+        print(tvec)
         result = np.hstack((cv2.Rodrigues(rvec)[0], tvec))
+        print('rt matrix:')
+        print(result)
+        print()
         result = cam_matrix @ result # be not afraid, sinner, this is just numpy matrix multiplication
         return result
 

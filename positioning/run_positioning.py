@@ -24,6 +24,8 @@ def main():
     
     cam_ids = args.cam_ids
 
+    # ----------------------------------- setup -----------------------------------
+
     # create captures
     caps = []
     for cam_id in cam_ids:
@@ -52,6 +54,8 @@ def main():
 
     frames = [None, None]
     points = [None, None]
+
+    # ----------------------------------- running -----------------------------------
 
     # read frame by frame
     while True:
