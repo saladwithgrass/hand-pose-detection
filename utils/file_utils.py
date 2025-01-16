@@ -1,3 +1,4 @@
+import pickle
 import json
 import cv2
 
@@ -49,3 +50,11 @@ def create_capture_from_json(dev_id:int, json_path:str) -> cv2.VideoCapture:
         cap.set(getattr(cv2, name), value)
     return cap
     
+def load_camera_intrinsics(path_to_file:str):
+    with open(path_to_file, 'rb') as intr_file:
+        intr_dict = pickle.load(intr_file)
+        cam_matrix = intr_dict['camera_matrix']
+        dist_coeffs = intr_dict['dist_coeffs']
+        width = intr_dict['image_width']
+        height = intr_dict['image_height']
+        return cam_matrix, dist_coeffs, width, height

@@ -6,9 +6,10 @@ import numpy as np
 
 import sys
 sys.path.append('../')
-from utils.capture_opener import create_capture_from_json
-from utils.calibration_utils import create_charuco_from_json
-
+from utils.file_utils import (
+    create_capture_from_json, 
+    create_charuco_from_json
+    )
 
 
 def main():

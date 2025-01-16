@@ -14,9 +14,9 @@ class Visualizer3D():
 
         self.ax.set_xlim3d([-self.MAX_DIM, self.MAX_DIM])
         self.ax.set_ylim3d([-self.MAX_DIM, self.MAX_DIM])
-        self.ax.set_zlim3d([-self.MAX_DIM, self.MAX_DIM])
+        self.ax.set_zlim3d([-self.MAX_DIM*5, self.MAX_DIM*5])
     
-    def update_points(self, joint_coordinates, pause = 0.001, cameras=None, camera_colors=None):
+    def update_points(self, joint_coordinates, pause = 0.01, cameras=None, camera_colors=None):
         """
         Takes and array of 3d vectors with point coordinates.
         Updates plot.
@@ -49,5 +49,5 @@ class Visualizer3D():
         self.ax.set_zlabel('Z')
         self.ax.set_xlim3d([-self.MAX_DIM, self.MAX_DIM])
         self.ax.set_ylim3d([-self.MAX_DIM, self.MAX_DIM])
-        self.ax.set_zlim3d([-self.MAX_DIM, self.MAX_DIM])
+        self.ax.set_zlim3d([-self.MAX_DIM*5, self.MAX_DIM*5])
         plt.pause(pause)

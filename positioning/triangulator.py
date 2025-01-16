@@ -78,16 +78,15 @@ class CameraTriangulator():
             eq2 = p1 - u * p3
             DLT_equations.append(eq1)
             DLT_equations.append(eq2)
-            print(DLT_equations)
         
         # convert to np.array for convenience
         DLT_matrix = np.array(DLT_equations)
 
         # decompose matrix
-        U, S, vh = np.linalg.svd(DLT_matrix)
+        U, S, vh = np.linalg.svd(DLT_matrix.T @ DLT_matrix)
 
         # get last column
-        result = vh[3, 0:3]
+        result = vh[3, 0:3] / vh[3, 3]
         return result
 
 
