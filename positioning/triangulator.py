@@ -50,15 +50,46 @@ class CameraTriangulator():
 
     def create_projection_matrix(self, rvec, tvec, cam_matrix):
         result = np.hstack((cv2.Rodrigues(rvec)[0], tvec))
-        result = np.dot(cam_matrix, result)
+        result = cam_matrix @ result # be not afraid, sinner, this is just numpy matrix multiplication
         return result
 
     def undistort_image(self, image, camera_index):
         map1, map2 = self.undistortMaps[camera_index]
         return cv2.remap(image, map1=map1, map2=map2, interpolation=cv2.INTER_LINEAR)
 
-    def triangulate(self, pixel_positions):
-        pass
+    def undistort_point(self, point:tuple[int, int], camera_index):
+        map1, map2 = self.undistortMaps[camera_index]
+        x = point[0]
+        y = point[1]
+        print(map1[y, x])
+        # x_undistorted = map1[y_distorted, x_distorted][0]
+        # y_undistorted = map2[y_distorted, x_distorted][0]
+        return (int(map1[y, x]), int(map2[y, x]))
+
+    def triangulate(self, pixel_positions=None):
+        
+        # construct matrix for solving DLT
+        DLT_equations = []
+        for point, projection_matrix in zip(pixel_positions, self.projection_matrices):
+            p1, p2, p3 = tuple(projection_matrix)
+            u = point[0]
+            v = point[1]
+            eq1 = v * p1 - p2
+            eq2 = p1 - u * p3
+            DLT_equations.append(eq1)
+            DLT_equations.append(eq2)
+            print(DLT_equations)
+        
+        # convert to np.array for convenience
+        DLT_matrix = np.array(DLT_equations)
+
+        # decompose matrix
+        U, S, vh = np.linalg.svd(DLT_matrix)
+
+        # get last column
+        result = vh[3, 0:3]
+        return result
+
 
 def create_triangulator_from_files(
         intr_files:list[str],
@@ -106,8 +137,8 @@ def create_triangulator_from_files(
         distortion_coefficients=dist_coeffs,
         cameras_rvecs=rvecs,
         cameras_tvecs=tvecs,
-        image_height=image_size[1],
-        image_width=image_size[0]
+        image_width=image_size[0],
+        image_height=image_size[1]
         )
             
 
@@ -120,6 +151,12 @@ if __name__ == '__main__':
 
     triangulator = create_triangulator_from_files(args.intrinsics, args.orientation)
 
+    point1 = (1000, 500)
+    point2 = (100, 800)
+
+    triangulator.triangulate([point1, point2])
+    exit(0)
+
     cap = create_capture_from_json(2, '../config/capture_params.json')
 
     while True:
@@ -129,6 +166,6 @@ if __name__ == '__main__':
             break
 
         undistorted = triangulator.undistort_image(frame, 0)
-        cv2.imshow('huh', undistorted)
+        cv2.imshow('undistorted', cv2.resize(undistorted, dsize=None, fx=0.5, fy=0.5))
         if cv2.waitKey(10) == 27:
             break
