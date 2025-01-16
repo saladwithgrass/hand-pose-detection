@@ -125,6 +125,7 @@ def main():
                     }
                     with open(cur_name, 'wb') as output:
                         pickle.dump(data_struct, output)
+                    print(f'Saved as {cur_name}.')
             else:
                 print(' in one file.')
                 data_struct = {
@@ -138,7 +139,7 @@ def main():
                 with open(output_name, 'wb') as output:
                     pickle.dump(data_struct, output)
                 print(f'Saved to {output_name}')
-                return
+            return
                         
 
 
