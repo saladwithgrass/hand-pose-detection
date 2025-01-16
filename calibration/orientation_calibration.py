@@ -100,8 +100,15 @@ def main():
                 # x - red
                 # y - green
                 # z - blue
-                cam_rvecs[idx] = rvec
-                cam_tvecs[idx] = tvec
+                print(tvec)
+                rotation_matrix = cv2.Rodrigues(rvec)[0]
+                homogenous_matrix = np.hstack((rotation_matrix, tvec))
+                homogenous_matrix = np.vstack((homogenous_matrix, [0, 0, 0, 1]))
+                inverse_homogenous_matrix = np.linalg.inv(homogenous_matrix)
+                inverse_rvec = cv2.Rodrigues(inverse_homogenous_matrix[0:3, 0:3])[0]
+                inverse_tvec = inverse_homogenous_matrix[0:3, 3]
+                cam_rvecs[idx] = inverse_rvec
+                cam_tvecs[idx] = [inverse_tvec]
                 cv2.drawFrameAxes(
                     image=frame,
                     cameraMatrix=cam_matrices[idx],

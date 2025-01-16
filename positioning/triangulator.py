@@ -45,6 +45,8 @@ class CameraTriangulator():
             ))
 
         # create projection matrices
+        print('AAAAAAAAAAAAAAAAAAAAAAAAAAa')
+        print(cameras_rvecs, flush=True)
         for cam_matrix, rvec, tvec in zip(camera_matrices, cameras_rvecs, cameras_tvecs):
             self.projection_matrices.append(self.create_projection_matrix(rvec, tvec, cam_matrix))
 
@@ -52,6 +54,8 @@ class CameraTriangulator():
         print('rvec:')
         print(cv2.Rodrigues(rvec)[0])
         print('tvec:')
+        print(tvec)
+        tvec = tvec.reshape((3, 1))
         print(tvec)
         result = np.hstack((cv2.Rodrigues(rvec)[0], tvec))
         print('rt matrix:')
