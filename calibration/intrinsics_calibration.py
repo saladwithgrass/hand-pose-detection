@@ -17,6 +17,7 @@ def main():
     parser.add_argument('-nf', '--no-frames-name', help='Prevents number of frames from being added to the name of output', action='store_true')
     parser.add_argument('-o', '--output', help='Path to output file', default = None)
     parser.add_argument('-cj', '--capture_json', help='Path to json with capture parameters', default='../config/capture_params.json')
+    parser.add_argument('-nt', '--num-threads', help='Number of threads used in cv2.setNumThreads.', type=int)
     args = parser.parse_args()
     cam_id = args.cam_id
 
