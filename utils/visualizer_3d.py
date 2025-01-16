@@ -14,7 +14,7 @@ class Visualizer3D():
 
         self.ax.set_xlim3d([-self.MAX_DIM, self.MAX_DIM])
         self.ax.set_ylim3d([-self.MAX_DIM, self.MAX_DIM])
-        self.ax.set_zlim3d([-self.MAX_DIM*5, self.MAX_DIM*5])
+        self.ax.set_zlim3d([-self.MAX_DIM, self.MAX_DIM])
     
     def update_points(self, joint_coordinates, pause = 0.01, cameras=None, camera_colors=None):
         """
@@ -49,5 +49,5 @@ class Visualizer3D():
         self.ax.set_zlabel('Z')
         self.ax.set_xlim3d([-self.MAX_DIM, self.MAX_DIM])
         self.ax.set_ylim3d([-self.MAX_DIM, self.MAX_DIM])
-        self.ax.set_zlim3d([-self.MAX_DIM*5, self.MAX_DIM*5])
+        self.ax.set_zlim3d([-self.MAX_DIM, self.MAX_DIM])
         plt.pause(pause)
