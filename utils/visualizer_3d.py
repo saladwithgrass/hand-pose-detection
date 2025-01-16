@@ -16,7 +16,7 @@ class Visualizer3D():
         self.ax.set_ylim3d([-self.MAX_DIM, self.MAX_DIM])
         self.ax.set_zlim3d([-self.MAX_DIM, self.MAX_DIM])
     
-    def update_points(self, joint_coordinates, pause = 0.001):
+    def update_points(self, joint_coordinates, pause = 0.001, cameras=None, camera_colors=None):
         """
         Takes and array of 3d vectors with point coordinates.
         Updates plot.
@@ -33,6 +33,17 @@ class Visualizer3D():
 
         # plot points
         self.ax.plot(xs=xs, ys=ys, zs=zs, marker='o')
+        if cameras is not None:
+            if camera_colors is None:
+                camera_colors = ['red'] * len(cameras)
+            total_cameras = len(cameras)
+            cameras = np.array(cameras).T
+            print(cameras)
+            for camera_idx in range(total_cameras):
+                cam_xs = cameras[0][camera_idx]
+                cam_ys = cameras[1][camera_idx]
+                cam_zs = cameras[2][camera_idx]
+                self.ax.plot(xs=cam_xs, ys=cam_ys, zs=cam_zs, color=camera_colors[camera_idx], marker='x')
         self.ax.set_xlabel('X')
         self.ax.set_ylabel('Y')
         self.ax.set_zlabel('Z')
