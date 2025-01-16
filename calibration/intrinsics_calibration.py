@@ -113,7 +113,8 @@ def main():
 
     data_dict = {
         'camera_matrix' : camera_matrix,
-        'dist_coeffs' : dist_coeffs
+        'dist_coeffs' : dist_coeffs,
+        'image_size' : image_size
     }
 
     file_name = args.output
