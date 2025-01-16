@@ -8,18 +8,43 @@ class CameraTriangulator():
                     camera_matrices:list[np.ndarray],
                     distortion_coefficients:list[np.ndarray],
                     cameras_rvecs:list[np.ndarray],
-                    cameras_tvecs:list[np.ndarray]
+                    cameras_tvecs:list[np.ndarray],
+                    image_height:int,
+                    image_width:int
                 ):
         # create self fields
         self.camera_matrices = camera_matrices
         self.dist_coeffs = distortion_coefficients
         self.rvecs = cameras_rvecs
         self.tvecs = cameras_tvecs
-        self.optimal_cam_matrices = []
-        
+        self.image_size = (image_height, image_width)
+        self.new_cam_matrices = []
+        self.undistortMaps = []
+        self.projection_matrices = []
+
+        # create new optimal camera matrices
+        for cam_matrix, dist_coeffs in zip(camera_matrices, distortion_coefficients):
+            new_cam_matrix, roi = cv2.getOptimalNewCameraMatrix(
+                cameraMatrix=cam_matrix, 
+                distCoeffs=dist_coeffs, 
+                imageSize=self.image_size
+                )
+            self.new_cam_matrices.append(new_cam_matrix)
+            print(cam_matrix)
+            print(new_cam_matrix)
+            print(' ')
+            self.undistortMaps.append(cv2.initUndistortRectifyMap(
+                cameraMatrix=cam_matrix,
+                distCoeffs=dist_coeffs,
+                R=cv2.Mat(),
+                newCameraMatrix=new_cam_matrix,
+                size=self.image_size,
+                m1type=cv2.CV_32FC1
+            ))
+
         # create projection matrices
         for cam_matrix, rvec, tvec in zip(camera_matrices, cameras_rvecs, cameras_tvecs):
-            print(self.create_projection_matrix(rvec, tvec, cam_matrix))
+            self.projection_matrices.append(self.create_projection_matrix(rvec, tvec, cam_matrix))
 
     def create_projection_matrix(self, rvec, tvec, cam_matrix):
         result = np.hstack((cv2.Rodrigues(rvec)[0], tvec))
