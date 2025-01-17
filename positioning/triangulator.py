@@ -84,8 +84,7 @@ class CameraTriangulator():
         DLT_equations = []
         for point, projection_matrix in zip(pixel_positions, self.projection_matrices):
             p1, p2, p3 = tuple(projection_matrix)
-            u = point[0]
-            v = point[1]
+            u, v = tuple(point)
             eq1 = v * p1 - p2
             eq2 = p1 - u * p3
             DLT_equations.append(eq1)
@@ -95,7 +94,7 @@ class CameraTriangulator():
         DLT_matrix = np.array(DLT_equations)
 
         # decompose matrix
-        U, S, vh = np.linalg.svd(DLT_matrix.T @ DLT_matrix)
+        U, S, vh = np.linalg.svd(DLT_matrix.T)#  @ DLT_matrix)
 
         # get last column
         result = vh[3, 0:3] / vh[3, 3]
