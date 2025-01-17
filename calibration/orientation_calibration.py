@@ -17,10 +17,10 @@ def click_callback(event, x, y, flags, param):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('cam_ids', 
-                        help='camera device id /dev/vid*', 
+    parser.add_argument('input_sources', 
+                        help='camera device id /dev/vid* or path to video', 
                         nargs='+', 
-                        type=int)
+                        )
 
     parser.add_argument('-if', '--intrinsics_files', 
                         help='path to .pkl file with data from intrinsics calibration. Must correspond to cam_ids', 
@@ -31,19 +31,34 @@ def main():
     parser.add_argument('-s', '--separate', help='If set, stores cameras orientations in separate files.', action='store_true')
     parser.add_argument('-ds', '--display-scale', help='How shows how much images from cameras will be scaled down when displayed.', type=float, default=0.4)
     args = parser.parse_args()
+    cv2.setNumThreads(16)
 
+    # set some args as variables
+    input_sources = args.input_sources
     scale = args.display_scale
 
-    if len(args.cam_ids) != len(args.intrinsics_files):
-        print('Amount of input devices and intrinsics file must match. Aborting')
-        return
-    
-    cam_ids = args.cam_ids
-    # create charuco board from default parameters
-    charuco_board = create_charuco_from_json()
 
-    # create charuco detector
-    detector = aruco.CharucoDetector(charuco_board)
+    if len(input_sources) != len(args.intrinsics_files):
+        print('Amount of inputs and intrinsics file must match. Aborting')
+        return
+
+    # check if everything is camera:
+    use_camera_input = True 
+    for input_source in input_sources:
+        use_camera_input = use_camera_input and input_source.isdigit()
+
+    # empty list for captures
+    caps = list()
+    # open cameras if we use them
+    if use_camera_input:
+        cam_ids = input_sources
+
+        # open camera captures
+        for cam_id in cam_ids:
+            caps.append(create_capture_from_json(int(cam_id), '../config/capture_params.json'))
+    else:
+        for input_source in input_sources:
+            caps.append(cv2.VideoCapture(input_source))
 
     # load intrinsics
     intrinsics_files = args.intrinsics_files
@@ -55,10 +70,11 @@ def main():
             cam_matrices.append(cam_intrinsics['camera_matrix'])
             dist_coeffs.append(cam_intrinsics['dist_coeffs'])
 
-    # open camera capture
-    caps = list()
-    for cam_id in cam_ids:
-        caps.append(create_capture_from_json(cam_id, '../config/capture_params.json'))
+    # create charuco board from default parameters
+    charuco_board = create_charuco_from_json()
+
+    # create charuco detector
+    detector = aruco.CharucoDetector(charuco_board)
     
     # read frame by frame
     captured_frames = [None] * len(caps)
@@ -100,7 +116,6 @@ def main():
                 # x - red
                 # y - green
                 # z - blue
-                print(tvec)
                 rotation_matrix = cv2.Rodrigues(rvec)[0]
                 homogenous_matrix = np.hstack((rotation_matrix, tvec))
                 homogenous_matrix = np.vstack((homogenous_matrix, [0, 0, 0, 1]))
@@ -118,11 +133,11 @@ def main():
                     length=100,
                     thickness=10
                 )
-            cur_window_name = f'camera:{cam_ids[idx]}'
+            cur_window_name = f'source:{input_sources[idx]}'
             cv2.imshow(cur_window_name, cv2.resize(frame, dsize=(None), fx=scale, fy=scale))
             cv2.setMouseCallback(cur_window_name, click_callback)
             idx += 1
-        key = cv2.waitKey(1)
+        key = cv2.waitKey(0)
         if key == 27:
             break
         elif key == ord('a'):
@@ -133,12 +148,12 @@ def main():
                 print(' separately.')
                 prefix = args.output
                 prefix.removesuffix('.pkl')
-                for idx in range(len(cam_ids)):
-                    cur_name = prefix + f'_{cam_ids[idx]}.pkl'
+                for idx in range(len(input_sources)):
+                    cur_name = prefix + f'_{input_sources[idx]}.pkl'
                     data_struct = {
                         'rvec' : cam_rvecs[idx],
                         'tvec' : cam_tvecs[idx],
-                        'cam_id' : cam_ids[idx]
+                        'cam_id' : input_sources[idx]
                     }
                     with open(cur_name, 'wb') as output:
                         pickle.dump(data_struct, output)
@@ -148,7 +163,7 @@ def main():
                 data_struct = {
                     'rvecs' : cam_rvecs,
                     'tvecs' : cam_tvecs,
-                    'cam_ids' : cam_ids
+                    'cam_ids' : input_sources
                 }
                 output_name = args.output
                 output_name.removesuffix('pkl')
