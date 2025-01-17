@@ -14,7 +14,8 @@ class CameraTriangulator():
                     cameras_rvecs:list[np.ndarray],
                     cameras_tvecs:list[np.ndarray],
                     image_width:int,
-                    image_height:int
+                    image_height:int,
+                    cameras_extrinsics:list[np.ndarray] = None
                 ):
         # create self fields
         self.camera_matrices = camera_matrices
@@ -25,6 +26,7 @@ class CameraTriangulator():
         self.new_cam_matrices = []
         self.undistortMaps = []
         self.projection_matrices = []
+        self.extrinsics = cameras_extrinsics
 
         # create new optimal camera matrices and undistort maps
         for cam_matrix, dist_coeffs in zip(camera_matrices, distortion_coefficients):
@@ -55,7 +57,7 @@ class CameraTriangulator():
         print(cv2.Rodrigues(rvec)[0])
         print('tvec:')
         print(tvec)
-        tvec = tvec.reshape((3, 1))
+        tvec = np.array(tvec).reshape((3, 1))
         print(tvec)
         result = np.hstack((cv2.Rodrigues(rvec)[0], tvec))
         print('rt matrix:')
@@ -109,6 +111,7 @@ def create_triangulator_from_files(
     dist_coeffs = []
     rvecs = []
     tvecs = []
+    extrinsics = []
     for intr_filename, orientation_filename in zip(intr_files, orientation_files):
         image_size = None
         with open(intr_filename, 'rb') as intr_file, \
@@ -126,6 +129,7 @@ def create_triangulator_from_files(
             cur_image_size = (cur_image_width, cur_image_height)
             cur_rvec = cur_orientation['rvec']
             cur_tvec = cur_orientation['tvec']
+            cur_extrinsics = cur_orientation['extrinsics']
 
             # check if image sizes are the same
             if image_size is not None and image_size != cur_image_size:
@@ -140,6 +144,7 @@ def create_triangulator_from_files(
             dist_coeffs.append(cur_dist_coeffs)
             rvecs.append(cur_rvec)
             tvecs.append(cur_tvec)
+            extrinsics.append(cur_extrinsics)
     
     # create and return triangulator
     return CameraTriangulator(
@@ -148,7 +153,8 @@ def create_triangulator_from_files(
         cameras_rvecs=rvecs,
         cameras_tvecs=tvecs,
         image_width=image_size[0],
-        image_height=image_size[1]
+        image_height=image_size[1],
+        cameras_extrinsics=extrinsics
         )
             
 

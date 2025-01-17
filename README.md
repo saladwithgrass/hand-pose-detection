@@ -64,5 +64,8 @@ For start i will try to track the position of charuco board and see where it get
     Steps were updated:
 
         1) Calibrate two cameras and extract rvecs and tvecs in their correct form
-        2) Try to triangulate the world origin. 
+        2) Try to triangulate the world origin. This is done by getting its pixel representation when calibration orientation. 
+        
+АХАХАХАХАХАХАХ Я НАШЕЛ ЕБАНУЮ ОШИБКУ, ЩА КАК СДЕЛАЮ ТРИАНГУЛЯЦИЮ И ОНА ЗАРАБОТАЕТ АХАХАХАХАХА
+
 3) Triangulate hand
