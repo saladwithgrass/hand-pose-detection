@@ -21,7 +21,7 @@ class CameraTriangulator():
         self.camera_matrices = camera_matrices
         self.dist_coeffs = distortion_coefficients
         self.rvecs = cameras_rvecs
-        self.tvecs = cameras_tvecs
+        self.tvecs = np.array(cameras_tvecs)
         self.image_size = (image_width, image_height)
         self.new_cam_matrices = []
         self.undistortMaps = []
@@ -47,23 +47,22 @@ class CameraTriangulator():
             ))
 
         # create projection matrices
-        print('AAAAAAAAAAAAAAAAAAAAAAAAAAa')
         print(cameras_rvecs, flush=True)
         for cam_matrix, rvec, tvec in zip(camera_matrices, cameras_rvecs, cameras_tvecs):
             self.projection_matrices.append(self.create_projection_matrix(rvec, tvec, cam_matrix))
 
     def create_projection_matrix(self, rvec, tvec, cam_matrix):
-        print('rvec:')
-        print(cv2.Rodrigues(rvec)[0])
-        print('tvec:')
-        print(tvec)
+
+        # reshape tvec hust to be sure
         tvec = np.array(tvec).reshape((3, 1))
-        print(tvec)
-        result = np.hstack((cv2.Rodrigues(rvec)[0], tvec))
-        print('rt matrix:')
-        print(result)
-        print()
-        result = cam_matrix @ result # be not afraid, sinner, this is just numpy matrix multiplication
+        # get rotation matrix from rvec
+        rvec_matrix, _ = cv2.Rodrigues(rvec)
+        # create homogenous transform
+        homogenous_transform = np.hstack((rvec_matrix, tvec))
+        homogenous_transform = np.vstack((homogenous_transform, [0, 0, 0, 1]))
+        # invert homogenous transform
+        inv_homogenous_transform = np.linalg.inv(homogenous_transform)
+        result = cam_matrix @ inv_homogenous_transform[0:3, ::] # be not afraid, sinner, this is just numpy matrix multiplication
         return result
 
     def undistort_image(self, image, camera_index):

@@ -138,8 +138,8 @@ def main():
                 inverse_tvec = inverse_homogenous_matrix[0:3, 3]
 
                 # save orientation
-                cam_rvecs[idx] = inverse_rvec
-                cam_tvecs[idx] = [inverse_tvec]
+                cam_rvecs[idx] = rvec
+                cam_tvecs[idx] = [tvec]
                 cam_extrinsics[idx] = inverse_homogenous_matrix
                 cv2.drawFrameAxes(
                     image=frame,
