@@ -154,7 +154,7 @@ def main():
             cv2.imshow(cur_window_name, cv2.resize(frame, dsize=(None), fx=scale, fy=scale))
             cv2.setMouseCallback(cur_window_name, click_callback)
             idx += 1
-        key = cv2.waitKey(0)
+        key = cv2.waitKey(5)
         if key == 27:
             break
         elif key == ord('a'):

@@ -17,12 +17,15 @@ def main():
     parser.add_argument('-cj', '--capture_json', help='Path to json with capture parameters', default='../config/capture_params.json')
     parser.add_argument('-ci', '--camera-intrinsics', help='Path to .pkl file with camera intrinsic parameters.', required=True, nargs=2)
     parser.add_argument('-or', '--orientation', help='Path to .pkl file with camera position parameters.', required=True, nargs=2)
-    parser.add_argument('-nw', '--num-threads', type=int, default=8)
+    parser.add_argument('-nt', '--num-threads', type=int, default=8)
+    parser.add_argument('-nv', '--no-video', help='If set, will not display images from cameras.', action='store_true')
 
     args = parser.parse_args()
-    cv2.setNumThreads(args.num_threads)
     
+    # set arguments
+    cv2.setNumThreads(args.num_threads)
     cam_ids = args.cam_ids
+    no_video = args.no_video    
 
     # ----------------------------------- setup -----------------------------------
 
@@ -53,14 +56,14 @@ def main():
     objPoints[3] = [-marker_length/2., -marker_length/2., 0]
 
     frames = [None, None]
-    points = [None, None]
+    camera_points = [None, None]
 
     # ----------------------------------- running -----------------------------------
 
     # read frame by frame
     while True:
         # zero points out
-        points = [None, None] 
+        camera_points = [None, None] 
 
         # read frames from caps
         for idx in range(len(caps)):
@@ -84,7 +87,7 @@ def main():
                 # add aruco corners to points that will be triangulated
                 for aruco_idx in range(len(aruco_ids)):
                     if aruco_ids[aruco_idx] == 0:
-                        points[idx] = np.reshape(aruco_corners[aruco_idx], (4, 2))
+                        camera_points[idx] = np.reshape(aruco_corners[aruco_idx], (4, 2))
                         cv2.polylines(frame, aruco_corners[0].astype(np.int32), isClosed=True, color=(255, 0, 255), thickness=3)
                         break
 
@@ -92,13 +95,13 @@ def main():
         # -------------------- Position detection part end -------------------- 
 
         # make sure that marker is visible on both cameras
-        if points[0] is None or points[1] is None:
+        if camera_points[0] is None or camera_points[1] is None:
             print('One camera did not detect markers. Skipping.')
             continue
 
         # triangulate each corner
         points3d = []
-        for point1, point2 in zip(points[0], points[1]):
+        for point1, point2 in zip(camera_points[0], camera_points[1]):
             points3d.append(triangulator.triangulate([point1, point2]))
             print(points3d[-1])
 
@@ -108,9 +111,10 @@ def main():
 
         scale = 0.4
         idx = 0
-        for frame in frames:
-            cv2.imshow(f'huh{idx}', cv2.resize(frame, dsize=None, fx=scale, fy=scale))
-            idx += 1
+        if not no_video:
+            for frame in frames:
+                cv2.imshow(f'huh{idx}', cv2.resize(frame, dsize=None, fx=scale, fy=scale))
+                idx += 1
         # wait and lsiten for exit
         if cv2.waitKey(1) == 27:
             break

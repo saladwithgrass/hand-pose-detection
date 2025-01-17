@@ -10,11 +10,13 @@ class Visualizer3D():
         self.ax.set_ylabel('Y')
         self.ax.set_zlabel('Z')
 
-        self.MAX_DIM = 500
+        self.MAX_DIM = 100
+        self.Z_OFFSET = 1300
+
 
         self.ax.set_xlim3d([-self.MAX_DIM, self.MAX_DIM])
         self.ax.set_ylim3d([-self.MAX_DIM, self.MAX_DIM])
-        self.ax.set_zlim3d([-self.MAX_DIM, self.MAX_DIM])
+        self.ax.set_zlim3d([-self.MAX_DIM + self.Z_OFFSET, self.MAX_DIM + self.Z_OFFSET])
     
     def update_points(self, joint_coordinates, pause = 0.01, cameras=None, camera_colors=None):
         """
@@ -30,7 +32,9 @@ class Visualizer3D():
         xs = joint_coordinates[0]
         ys = joint_coordinates[1]
         zs = joint_coordinates[2]
-
+        print('xs: ', xs)
+        print('ys: ', ys)
+        print('zs: ', zs)
         # plot points
         self.ax.plot(xs=xs, ys=ys, zs=zs, marker='o')
         if cameras is not None:
@@ -49,5 +53,5 @@ class Visualizer3D():
         self.ax.set_zlabel('Z')
         self.ax.set_xlim3d([-self.MAX_DIM, self.MAX_DIM])
         self.ax.set_ylim3d([-self.MAX_DIM, self.MAX_DIM])
-        self.ax.set_zlim3d([-self.MAX_DIM, self.MAX_DIM])
+        self.ax.set_zlim3d([-self.MAX_DIM + self.Z_OFFSET, self.MAX_DIM + self.Z_OFFSET])
         plt.pause(pause)

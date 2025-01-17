@@ -94,7 +94,7 @@ class CameraTriangulator():
         DLT_matrix = np.array(DLT_equations)
 
         # decompose matrix
-        U, S, vh = np.linalg.svd(DLT_matrix.T)#  @ DLT_matrix)
+        U, S, vh = np.linalg.svd(DLT_matrix.T  @ DLT_matrix)
 
         # get last column
         result = vh[3, 0:3] / vh[3, 3]
