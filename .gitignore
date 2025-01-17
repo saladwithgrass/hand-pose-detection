@@ -1,3 +1,4 @@
 **/__pycache__/
 handpose3d
 calibration/orientation*.pkl
+.vscode
