@@ -97,6 +97,7 @@ def main():
         # make sure that marker is visible on both cameras
         if camera_points[0] is None or camera_points[1] is None:
             print('One camera did not detect markers. Skipping.')
+            visualizer.update_points([[0, 0, 0]])
             continue
 
         # triangulate each corner
