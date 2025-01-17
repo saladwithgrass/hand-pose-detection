@@ -81,6 +81,12 @@ def main():
     all_ok:bool = True
     cam_rvecs = [None] * len(caps)
     cam_tvecs = [None] * len(caps)
+    cam_extrinsics = [None] * len(caps)
+
+    for _ in range(100):
+        for cap in caps:
+            cap.read()
+
     while all_ok:
         idx = 0
         for cap in caps:
@@ -116,14 +122,25 @@ def main():
                 # x - red
                 # y - green
                 # z - blue
-                rotation_matrix = cv2.Rodrigues(rvec)[0]
+
+                # get rotation matrix from rvec
+                rotation_matrix, _ = cv2.Rodrigues(rvec)
+
+                # create homogenous matrix for charuco
                 homogenous_matrix = np.hstack((rotation_matrix, tvec))
                 homogenous_matrix = np.vstack((homogenous_matrix, [0, 0, 0, 1]))
+
+                # inverse homogenous matrix
                 inverse_homogenous_matrix = np.linalg.inv(homogenous_matrix)
-                inverse_rvec = cv2.Rodrigues(inverse_homogenous_matrix[0:3, 0:3])[0]
+
+                # get camera rvec and tvec from inverse homogenous matrix
+                inverse_rvec, _ = cv2.Rodrigues(inverse_homogenous_matrix[0:3, 0:3])
                 inverse_tvec = inverse_homogenous_matrix[0:3, 3]
+
+                # save orientation
                 cam_rvecs[idx] = inverse_rvec
                 cam_tvecs[idx] = [inverse_tvec]
+                cam_extrinsics[idx] = inverse_homogenous_matrix
                 cv2.drawFrameAxes(
                     image=frame,
                     cameraMatrix=cam_matrices[idx],
@@ -153,6 +170,7 @@ def main():
                     data_struct = {
                         'rvec' : cam_rvecs[idx],
                         'tvec' : cam_tvecs[idx],
+                        'extrinsics' : cam_extrinsics[idx],
                         'cam_id' : input_sources[idx]
                     }
                     with open(cur_name, 'wb') as output:
@@ -163,6 +181,7 @@ def main():
                 data_struct = {
                     'rvecs' : cam_rvecs,
                     'tvecs' : cam_tvecs,
+                    'extrinsics' : cam_extrinsics,
                     'cam_ids' : input_sources
                 }
                 output_name = args.output
