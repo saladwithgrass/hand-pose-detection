@@ -99,11 +99,12 @@ class CameraTriangulator():
         DLT_matrix = self.get_DLT_matrix(pixel_positions=pixel_positions) 
 
         # decompose 
-        U, S, vh = np.linalg.svd(DLT_matrix) #.T  @ DLT_matrix)
+        U, S, Vh = np.linalg.svd(DLT_matrix.T)
 
         # get last column
-        result = vh[-1, 0:3] / vh[-1, -1]
-        return result
+        result_homogenous = Vh[3, :] / Vh[3, 3]
+        print('homo: ', result_homogenous)
+        return result_homogenous[0:3]
 
 
 def create_triangulator_from_files(
