@@ -83,7 +83,7 @@ class CameraTriangulator():
         for point, projection_matrix in zip(pixel_positions, self.projection_matrices):
             p1, p2, p3 = tuple(projection_matrix)
             u, v = tuple(point)
-            eq1 = v * p1 - p2
+            eq1 = v * p3 - p2
             eq2 = p1 - u * p3
             DLT_equations.append(eq1)
             DLT_equations.append(eq2)
