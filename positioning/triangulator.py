@@ -103,9 +103,12 @@ class CameraTriangulator():
 
         # get last column
         result_homogenous = Vh[3, :] / Vh[3, 3]
-        print('homo: ', result_homogenous)
+        # print('homo: ', result_homogenous)
         return result_homogenous[0:3]
 
+    def get_cameras_world_position(self):
+
+        return self.tvecs
 
 def create_triangulator_from_files(
         intr_files:list[str],

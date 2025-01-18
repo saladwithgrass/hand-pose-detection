@@ -1,8 +1,8 @@
 {
-    "wrist" : "#FFFFFF",
-    "thumb" : "#FF0000",
-    "index" : "#FFFF00",
-    "middle" : "#00FF00",
-    "ring" : "#0000FF",
-    "pinky" : "#6a20aa"
+    "wrist" : "magenta",
+    "thumb" : "red",
+    "index" : "yellow",
+    "middle" : "green",
+    "ring" : "blue",
+    "pinky" : "purple"
 }

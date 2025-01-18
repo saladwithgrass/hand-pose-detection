@@ -4,6 +4,7 @@ import json
 from mediapipe import solutions
 from mediapipe.framework.formats import landmark_pb2
 import numpy as np
+import matplotlib.colors as mcolors
 
 MARGIN = 10  # pixels
 FONT_SIZE = 1
@@ -33,45 +34,40 @@ def str_to_color(color_str:str):
     color_str = color_str.replace('#', '')
     return (int(color_str[0:2], 16), int(color_str[2:4], 16), int(color_str[4:6], 16))
 
-def load_colors(path_to_colors:str, path_to_connections:str):
+def load_colors(path_to_colors:str, path_to_hierarchy:str):
     """
-    Loads colors json as a dict
+    Loads colors json as a dict.
+    The key is color name, the value are the joint indeces
     """
     finger_color_dict = json.load(open(path_to_colors, 'r'))
-    hierarchy_dict = json.load(open(path_to_connections, 'r'))
+    hierarchy_dict = json.load(open(path_to_hierarchy, 'r'))
     joint_color_dict = {}
-    joint_color_dict[hierarchy_dict['wrist']] = str_to_color(finger_color_dict['wrist'])
+    joint_color_dict[finger_color_dict['wrist']] = [0]
     for finger_name, connections in hierarchy_dict['fingers'].items():
-        for joint_id in connections:
-            joint_color_dict[joint_id] = str_to_color(finger_color_dict[finger_name])
+        joint_color_dict[finger_color_dict[finger_name]] = connections
     return joint_color_dict
 
-def draw_hand_landmarks_on_live(detection_result, rgb_image, _):
-    cv2.imshow('huh', rgb_image.numpy_view())
-
-def draw_detection_result(image, landmarks, hierarchy_dict, color_dict):
-    height, width, _ = image.shape
-    for hand in landmarks:
-        for landmark_id in range(len(hand)):
-            cur_landmark = hand[landmark_id]
-            landmark_connections = hierarchy_dict[landmark_id]
-            landmark_x = int(width*cur_landmark.x)
-            landmark_y = int(height*cur_landmark.y)
-            for connection_idx in landmark_connections:
-                connection = hand[connection_idx]
-                connection_x = int(connection.x * width)
-                connection_y = int(connection.y * height)
-                cv2.line(
-                    img=image, 
-                    pt1=(landmark_x, landmark_y), 
-                    pt2=(connection_x, connection_y),
-                    color=color_dict[connection_idx],
-                    thickness=4 
-                    )
+def draw_hand_on_image(image, landmarks, color_dict:dict, hierarchy_dict:dict):
+    for color, indexes in color_dict.items():
+        cur_color = mcolors.to_rgb(color)
+        cur_color = tuple(int(x * 255) for x in cur_color)
+        for index in indexes:
+            if index >= len(landmarks):
+                continue
             cv2.circle(
                 img=image,
-                center=(landmark_x, landmark_y),
-                color=(255, 0, 255),
-                radius=3,
+                center=landmarks[index],
+                radius=5,
+                color=cur_color,
                 thickness=-1
             )
+            
+            # draw connections if they exist
+            for connection_idx in hierarchy_dict[index]:
+                cv2.line(
+                    img=image,
+                    pt1=landmarks[index],
+                    pt2=landmarks[connection_idx],
+                    color=cur_color,
+                    thickness=2
+                )

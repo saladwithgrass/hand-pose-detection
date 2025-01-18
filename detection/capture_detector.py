@@ -2,20 +2,19 @@ import mediapipe as mp
 import time
 import cv2
 import numpy as np
-from utils.draw_results import (
-    load_colors, load_connections, draw_detection_result
-)
 
 class CaptureDetector():
 
-    def __init__(self, model_path:str, capture:cv2.VideoCapture):
+    def __init__(self, capture:cv2.VideoCapture, model_path:str='hand_landmarker.task'):
+
         # add capture to a class member
         self.cap:cv2.VideoCapture = capture
 
-        # load hand connections
-        self.hierarchy_dict = load_connections('hand_config/hand_connections.json')
-        # load finger colors
-        self.color_dict = load_colors('hand_config/hand_colors.json', 'hand_config/hand_connections.json')
+        # get image size
+        self.image_size = (
+            capture.get(cv2.CAP_PROP_FRAME_WIDTH),
+            capture.get(cv2.CAP_PROP_FRAME_HEIGHT)
+        )
 
         # create options for landmarker
         base_options = mp.tasks.BaseOptions
@@ -57,19 +56,23 @@ class CaptureDetector():
             int(timestamp_ms)
         )
 
-        # draw detection result
-        draw_detection_result(
-            image=frame, 
-            landmarks=detection_result.hand_landmarks,
-            hierarchy_dict=self.hierarchy_dict,
-            color_dict=self.color_dict
-            )
-        
-        # convert back to bgr
+        # convert back to rgb
         frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
-        return frame
+
+        if len(detection_result.hand_landmarks) == 0:
+            return [], frame
+
+        landmarks = detection_result.hand_landmarks[0]
+        points_array = [(0, 0)] * len(landmarks)
+        for idx in range(len(landmarks)):
+            points_array[idx] = (
+                int(landmarks[idx].x * self.image_size[0]),
+                int(landmarks[idx].y * self.image_size[1])
+                )
         
 
+        # return landmarks
+        return points_array, frame
 
     def __del__(self):
         self.landmarker.close()
