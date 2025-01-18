@@ -60,8 +60,7 @@ class CameraTriangulator():
         homogenous_transform = np.hstack((rvec_matrix, tvec))
         homogenous_transform = np.vstack((homogenous_transform, [0, 0, 0, 1]))
         # invert homogenous transform
-        inv_homogenous_transform = np.linalg.inv(homogenous_transform)
-        result = cam_matrix @ inv_homogenous_transform[0:3, ::] # be not afraid, sinner, this is just numpy matrix multiplication
+        result = cam_matrix @ homogenous_transform[0:3] # be not afraid, sinner, this is just numpy matrix multiplication
         return result
 
     def undistort_image(self, image, camera_index):
@@ -126,7 +125,9 @@ def create_triangulator_from_files(
             cur_image_size = (cur_image_width, cur_image_height)
             cur_rvec = cur_orientation['rvec']
             cur_tvec = cur_orientation['tvec']
-            cur_extrinsics = cur_orientation['extrinsics']
+            if 'extrinsics' in cur_orientation.keys():
+                cur_extrinsics = cur_orientation['extrinsics']
+                extrinsics.append(cur_extrinsics)
 
             # check if image sizes are the same
             if image_size is not None and image_size != cur_image_size:
@@ -141,8 +142,10 @@ def create_triangulator_from_files(
             dist_coeffs.append(cur_dist_coeffs)
             rvecs.append(cur_rvec)
             tvecs.append(cur_tvec)
-            extrinsics.append(cur_extrinsics)
-    
+
+    if len(extrinsics) == 0:
+        extrinsics = None
+
     # create and return triangulator
     return CameraTriangulator(
         camera_matrices=cam_matrices,

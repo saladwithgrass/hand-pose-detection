@@ -123,24 +123,9 @@ def main():
                 # y - green
                 # z - blue
 
-                # get rotation matrix from rvec
-                rotation_matrix, _ = cv2.Rodrigues(rvec)
-
-                # create homogenous matrix for charuco
-                homogenous_matrix = np.hstack((rotation_matrix, tvec))
-                homogenous_matrix = np.vstack((homogenous_matrix, [0, 0, 0, 1]))
-
-                # inverse homogenous matrix
-                inverse_homogenous_matrix = np.linalg.inv(homogenous_matrix)
-
-                # get camera rvec and tvec from inverse homogenous matrix
-                inverse_rvec, _ = cv2.Rodrigues(inverse_homogenous_matrix[0:3, 0:3])
-                inverse_tvec = inverse_homogenous_matrix[0:3, 3]
-
                 # save orientation
                 cam_rvecs[idx] = rvec
                 cam_tvecs[idx] = [tvec]
-                cam_extrinsics[idx] = inverse_homogenous_matrix
                 cv2.drawFrameAxes(
                     image=frame,
                     cameraMatrix=cam_matrices[idx],
