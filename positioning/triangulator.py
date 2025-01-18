@@ -47,7 +47,6 @@ class CameraTriangulator():
             ))
 
         # create projection matrices
-        print(cameras_rvecs, flush=True)
         for cam_matrix, rvec, tvec in zip(camera_matrices, cameras_rvecs, cameras_tvecs):
             self.projection_matrices.append(self.create_projection_matrix(rvec, tvec, cam_matrix))
 
