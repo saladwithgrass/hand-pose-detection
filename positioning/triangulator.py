@@ -76,8 +76,8 @@ class CameraTriangulator():
         # y_undistorted = map2[y_distorted, x_distorted][0]
         return (int(map1[y, x]), int(map2[y, x]))
 
-    def triangulate(self, pixel_positions=None):
-        
+    def get_DLT_matrix(self, pixel_positions):
+
         # construct matrix for solving DLT
         DLT_equations = []
         for point, projection_matrix in zip(pixel_positions, self.projection_matrices):
@@ -91,11 +91,18 @@ class CameraTriangulator():
         # convert to np.array for convenience
         DLT_matrix = np.array(DLT_equations)
 
-        # decompose matrix
-        U, S, vh = np.linalg.svd(DLT_matrix.T  @ DLT_matrix)
+        return DLT_matrix
+
+    def triangulate(self, pixel_positions):
+        
+        # get DLT matrix
+        DLT_matrix = self.get_DLT_matrix(pixel_positions=pixel_positions) 
+
+        # decompose 
+        U, S, vh = np.linalg.svd(DLT_matrix) #.T  @ DLT_matrix)
 
         # get last column
-        result = vh[3, 0:3] / vh[3, 3]
+        result = vh[-1, 0:3] / vh[-1, -1]
         return result
 
 
