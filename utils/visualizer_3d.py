@@ -7,25 +7,23 @@ from utils.draw_utils import load_colors, load_connections
 class Visualizer3D():
     
     def __init__(self):
+        
+        # add space to draw
         self.fig = plt.figure()
         self.ax = self.fig.add_subplot(111, projection='3d')
-        self.ax.set_xlabel('X')
-        self.ax.set_ylabel('Y')
-        self.ax.set_zlabel('Z')
-
+        
+        # set axis parameters
         self.MAX_DIM = 200
-        self.Z_OFFSET = 0
-
+        self.X_CENTER = 0
+        self.Y_CENTER = 0
+        self.Z_CENTER = 200
+        
         # load hand connections
         self.hierarchy_dict = load_connections('../config/hand_connections.json')
         # load finger colors
         self.color_dict = load_colors('../config/hand_colors.json', '../config/hand_connections.json')
-        # convert colors to matplotlib
-        max_color = 255.0
-        
-        print(self.hierarchy_dict)
-        print(self.color_dict)
 
+        # prepare axes 
         self.set_axes()
         
     def set_axes(self):
@@ -34,15 +32,16 @@ class Visualizer3D():
         self.ax.set_ylabel('Y')
         self.ax.set_zlabel('Z')
         # set limits
-        self.ax.set_xlim3d([-self.MAX_DIM, self.MAX_DIM])
-        self.ax.set_ylim3d([-self.MAX_DIM, self.MAX_DIM])
-        self.ax.set_zlim3d([-self.MAX_DIM + self.Z_OFFSET, self.MAX_DIM + self.Z_OFFSET])
+        self.ax.set_xlim3d([-self.MAX_DIM + self.X_CENTER, self.MAX_DIM + self.X_CENTER])
+        self.ax.set_ylim3d([-self.MAX_DIM + self.Y_CENTER, self.MAX_DIM + self.Y_CENTER])
+        self.ax.set_zlim3d([-self.MAX_DIM + self.Z_CENTER, self.MAX_DIM + self.Z_CENTER])
 
     def draw_hand(self, landmarks):
         # check if there's something to be drawn
         if len(landmarks) == 0:
             return
         landmarks = np.array(landmarks)
+        # make wrist cyclical
         # draw in each color
         for color, indexes in self.color_dict.items():
             cur_vectors = landmarks[indexes]
@@ -53,6 +52,7 @@ class Visualizer3D():
                 color=color,
                 marker='o'
                 )
+        
 
         
 

@@ -45,12 +45,18 @@ def load_colors(path_to_colors:str, path_to_hierarchy:str):
     joint_color_dict[finger_color_dict['wrist']] = [0]
     for finger_name, connections in hierarchy_dict['fingers'].items():
         joint_color_dict[finger_color_dict[finger_name]] = connections
+        # append to wrist
+        joint_color_dict[finger_color_dict['wrist']].append(connections[0])
+    # make wrist cyclical
+    joint_color_dict[finger_color_dict['wrist']].append(joint_color_dict[finger_color_dict['wrist']][0])
     return joint_color_dict
 
 def draw_hand_on_image(image, landmarks, color_dict:dict, hierarchy_dict:dict):
     for color, indexes in color_dict.items():
         cur_color = mcolors.to_rgb(color)
         cur_color = tuple(int(x * 255) for x in cur_color)
+        # stupid rgb to bgr conversion
+        cur_color = (cur_color[2], cur_color[1], cur_color[0])
         for index in indexes:
             if index >= len(landmarks):
                 continue
