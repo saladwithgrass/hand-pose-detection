@@ -47,9 +47,9 @@ class Visualizer3D():
         for color, indexes in self.color_dict.items():
             cur_vectors = landmarks[indexes]
             self.ax.plot(
-                xs=cur_vectors[:, 0],
+                xs=-cur_vectors[:, 0],
                 ys=cur_vectors[:, 1],
-                zs=cur_vectors[:, 2],
+                zs=-cur_vectors[:, 2],
                 color=color,
                 marker='o'
                 )
