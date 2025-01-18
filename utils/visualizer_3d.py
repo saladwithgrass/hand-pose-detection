@@ -10,8 +10,8 @@ class Visualizer3D():
         self.ax.set_ylabel('Y')
         self.ax.set_zlabel('Z')
 
-        self.MAX_DIM = 100
-        self.Z_OFFSET = 1300
+        self.MAX_DIM = 200
+        self.Z_OFFSET = 0
 
 
         self.ax.set_xlim3d([-self.MAX_DIM, self.MAX_DIM])

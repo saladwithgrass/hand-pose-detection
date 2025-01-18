@@ -99,7 +99,7 @@ class CameraTriangulator():
         DLT_matrix = self.get_DLT_matrix(pixel_positions=pixel_positions) 
 
         # decompose 
-        U, S, Vh = np.linalg.svd(DLT_matrix.T)
+        U, S, Vh = np.linalg.svd(DLT_matrix)
 
         # get last column
         result_homogenous = Vh[3, :] / Vh[3, 3]
