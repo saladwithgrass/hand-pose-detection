@@ -108,3 +108,7 @@ So, what is to be done:
 3) Draw parallel lines that lie as close to the original joints as possible.
 4) This is the gripper. Make it a plane
 5) Determine the orientation and position of this plane.
+
+Okay, so i slept on it and what i have to is first create the instrumental coordinates.
+I think it will be a class that takes in all detected hand landmarks and looks at index finger and creates axes vectors.
+Z axis goes along the index finger, X axis goes along the connection between the index and middle first joints(the place where they connect to the palm). Consequently, Y axis goes out from the inner side of palm.
