@@ -81,8 +81,8 @@ class CameraTriangulator():
         # construct matrix for solving DLT
         DLT_equations = []
         for point, projection_matrix in zip(pixel_positions, self.projection_matrices):
-            p1, p2, p3 = tuple(projection_matrix)
-            u, v = tuple(point)
+            p1, p2, p3 = projection_matrix[0], projection_matrix[1], projection_matrix[2]
+            u, v = point[0], point[1]
             eq1 = v * p3 - p2
             eq2 = p1 - u * p3
             DLT_equations.append(eq1)

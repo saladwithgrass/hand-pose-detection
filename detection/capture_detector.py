@@ -63,12 +63,12 @@ class CaptureDetector():
             return [], frame
 
         landmarks = detection_result.hand_landmarks[0]
-        points_array = [(0, 0)] * len(landmarks)
+        points_array = np.zeros((len(landmarks), 2), dtype=np.int16)
         for idx in range(len(landmarks)):
-            points_array[idx] = (
+            points_array[idx] = [
                 int(landmarks[idx].x * self.image_size[0]),
                 int(landmarks[idx].y * self.image_size[1])
-                )
+                ]
         
 
         # return landmarks
