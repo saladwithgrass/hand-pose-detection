@@ -168,7 +168,6 @@ def create_triangulator_from_files(
         cameras_extrinsics=extrinsics
         )
             
-
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
@@ -182,7 +181,6 @@ if __name__ == '__main__':
     point2 = (100, 800)
 
     triangulator.triangulate([point1, point2])
-    exit(0)
 
     cap = create_capture_from_json(2, '../config/capture_params.json')
 
