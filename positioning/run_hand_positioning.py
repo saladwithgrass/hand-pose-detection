@@ -12,6 +12,7 @@ from utils.file_utils import create_capture_from_json
 from triangulator import create_triangulator_from_files
 from detection.capture_detector import CaptureDetector
 from utils.draw_utils import draw_hand_on_image
+from gripper_converter import GripperConverter
 
 def main():
     parser = argparse.ArgumentParser()
@@ -20,14 +21,16 @@ def main():
     parser.add_argument('-ci', '--camera-intrinsics', help='Path to .pkl file with camera intrinsic parameters.', required=True, nargs=2)
     parser.add_argument('-or', '--orientation', help='Path to .pkl file with camera position parameters.', required=True, nargs=2)
     parser.add_argument('-nt', '--num-threads', type=int, default=8)
-    parser.add_argument('-nv', '--no-video', help='If set, will not display images from cameras.', action='store_true')
+    parser.add_argument('-sc', '--show-video', help='If set, will display images from cameras.', action='store_true')
+    parser.add_argument('-ds', '--display-scale', help='Scale of images from camera if they will be displayed.', type=float)
 
     args = parser.parse_args()
     
     # set arguments
     cv2.setNumThreads(args.num_threads)
     cam_ids = args.cam_ids
-    no_video = args.no_video    
+    show_video = args.show_video    
+    scale = args.display_scale
 
     # ----------------------------------- setup -----------------------------------
 
@@ -49,6 +52,10 @@ def main():
 
     # create visualizer
     visualizer = Visualizer3D()
+
+    # create converter to gripper
+    gripper_converter = GripperConverter('../config/hand_connections.json')
+    gripper_converter.set_orientation_index_z()
 
     frames = [None, None]
     camera_points = [None, None]
@@ -76,21 +83,25 @@ def main():
             points3d.append(triangulator.triangulate([point1, point2]))
 
         # update visualizer
-        # print('updating visualiser')
         visualizer.update_points(points3d)
 
-        scale = 0.4
-        idx = 0
-        if not no_video:
+        # run gripper conversion
+        gripper_converter.get_orientation_index_z(points3d=points3d)
+
+        # display frames from camera if needed
+        if show_video:
+            # process each frame from cameras
             for cam_idx in range(len(frames)):
+                # draw hand
                 draw_hand_on_image(
-                    frames[idx], 
-                    camera_points[idx], 
+                    frames[cam_idx], 
+                    camera_points[cam_idx], 
                     color_dict=visualizer.color_dict, 
                     hierarchy_dict=visualizer.hierarchy_dict
                     )
-                cv2.imshow(f'huh{idx}', cv2.resize(frames[idx], dsize=None, fx=scale, fy=scale))
-                idx += 1
+                # scale image and display it 
+                cv2.imshow(f'huh{idx}', cv2.resize(frames[cam_idx], dsize=None, fx=scale, fy=scale))
+
         # wait and lsiten for exit
         if cv2.waitKey(1) == 27:
             break
