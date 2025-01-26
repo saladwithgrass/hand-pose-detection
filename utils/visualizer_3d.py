@@ -52,12 +52,38 @@ class Visualizer3D():
                 color=color,
                 marker='o'
                 )
-        
 
-        
+    def draw_coordinates(self, axes, center):
+        # extract axes
+        x_axis = axes[0]*50 + center
+        y_axis = axes[1]*50 + center
+        z_axis = axes[2]*50 + center
 
-     
-    def update_points(self, joint_coordinates, pause = 0.01, cameras=None, camera_colors=None):
+        # draw x axis
+        self.ax.plot(
+            xs=[-center[0], -x_axis[0]],
+            ys=[center[1], x_axis[1]],
+            zs=[-center[2], -x_axis[2]],
+            color="red"
+        )
+
+        # draw y axis
+        self.ax.plot(
+            xs=[-center[0], -y_axis[0]],
+            ys=[center[1], y_axis[1]],
+            zs=[-center[2], -y_axis[2]],
+            color="green"
+        )
+
+        # draw z axis
+        self.ax.plot(
+            xs=[-center[0], -z_axis[0]],
+            ys=[center[1], z_axis[1]],
+            zs=[-center[2], -z_axis[2]],
+            color="blue"
+        )
+
+    def update_points(self, joint_coordinates=None, axes=None, axes_center=None, pause = 0.01, cameras=None, camera_colors=None):
         """
         Takes and array of 3d vectors with point coordinates.
         Updates plot.
@@ -66,8 +92,13 @@ class Visualizer3D():
         # clear previous drawings
         self.ax.cla()
 
-        # draw the hand
-        self.draw_hand(joint_coordinates) 
+        # draw end effector orientation
+        if axes is not None and axes_center is not None:
+            self.draw_coordinates(axes, axes_center)
+
+        # draw the hand if it is needed
+        if joint_coordinates is not None:
+            self.draw_hand(joint_coordinates) 
 
         # draw cameras if they exist
         if cameras is not None:

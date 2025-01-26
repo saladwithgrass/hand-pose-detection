@@ -56,4 +56,4 @@ class GripperConverter():
         # get orthogonal x
         x_vector = np.cross(y_vector, z_vector)
 
-        print(f'dot products: x.y: {x_vector @ y_vector}; y.z: {y_vector @ z_vector}; x.z: {x_vector @ z_vector}')
+        return [x_vector, y_vector, z_vector], center

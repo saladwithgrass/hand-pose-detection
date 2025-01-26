@@ -82,11 +82,14 @@ def main():
         for point1, point2 in zip(camera_points[0], camera_points[1]):
             points3d.append(triangulator.triangulate([point1, point2]))
 
-        # update visualizer
-        visualizer.update_points(points3d)
+        axes = None
+        axes_center = None
+        if len(points3d) != 0:
+            # run gripper conversion
+            axes, axes_center = gripper_converter.get_orientation_index_z(points3d=points3d)
 
-        # run gripper conversion
-        gripper_converter.get_orientation_index_z(points3d=points3d)
+        # update visualizer
+        visualizer.update_points(joint_coordinates=None, axes=axes, axes_center=axes_center)
 
         # display frames from camera if needed
         if show_video:
