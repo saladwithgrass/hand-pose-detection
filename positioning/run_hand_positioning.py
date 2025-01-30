@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import argparse
 import pickle
 import numpy as np
+from time import time
 
 import sys
 sys.path.append('../')
@@ -23,6 +24,7 @@ def main():
     parser.add_argument('-nt', '--num-threads', type=int, default=8)
     parser.add_argument('-sc', '--show-video', help='If set, will display images from cameras.', action='store_true')
     parser.add_argument('-ds', '--display-scale', help='Scale of images from camera if they will be displayed.', type=float)
+    parser.add_argument('-sh', '--show-hands', help='If set, will also display 3d representation of detected hands.', action='store_true')
 
     args = parser.parse_args()
     
@@ -31,6 +33,7 @@ def main():
     cam_ids = args.cam_ids
     show_video = args.show_video    
     scale = args.display_scale
+    show_hands = args.show_hands
 
     # ----------------------------------- setup -----------------------------------
 
@@ -64,6 +67,7 @@ def main():
 
     # read frame by frame
     while True:
+        start_time = time()
         # zero points out
         camera_points = [None, None] 
 
@@ -88,8 +92,11 @@ def main():
             # run gripper conversion
             axes, axes_center = gripper_converter.get_orientation_index_z(points3d=points3d)
 
+        if not show_hands:
+            points3d = None
+
         # update visualizer
-        visualizer.update_points(joint_coordinates=None, axes=axes, axes_center=axes_center)
+        visualizer.update_points(joint_coordinates=points3d, axes=axes, axes_center=axes_center)
 
         # display frames from camera if needed
         if show_video:
@@ -105,6 +112,8 @@ def main():
                 # scale image and display it 
                 cv2.imshow(f'huh{idx}', cv2.resize(frames[cam_idx], dsize=None, fx=scale, fy=scale))
 
+        end_time = time()
+        print('FPS: ', 1/ (end_time - start_time))
         # wait and lsiten for exit
         if cv2.waitKey(1) == 27:
             break
