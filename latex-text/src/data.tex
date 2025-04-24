@@ -1,0 +1,50 @@
+%%% Основные сведения %%%
+\newcommand{\thesisAuthorLastName}{Скоробогатов}
+\newcommand{\thesisAuthorOtherNames}{Егор Викторович}
+\newcommand{\thesisAuthorInitials}{Е. В.}
+\newcommand{\thesisAuthor}             % Диссертация, ФИО автора
+{%
+    \texorpdfstring{% \texorpdfstring takes two arguments and uses the first for (La)TeX and the second for pdf
+        \thesisAuthorLastName~\thesisAuthorOtherNames% так будет отображаться на титульном листе или в тексте, где будет использоваться переменная
+    }{%
+        \thesisAuthorLastName, \thesisAuthorOtherNames% эта запись для свойств pdf-файла. В таком виде, если pdf будет обработан программами для сбора библиографических сведений, будет правильно представлена фамилия.
+    }
+}
+\newcommand{\thesisAuthorShort}        % Диссертация, ФИО автора инициалами
+{\thesisAuthorInitials~\thesisAuthorLastName}
+%\newcommand{\thesisUdk}                % Диссертация, УДК
+%{\fixme{xxx.xxx}}
+\newcommand{\thesisTitle}              % Диссертация, название
+{Визуальная система телеоперации манипулятором с двухпальцевым захватом}
+\newcommand{\thesisSpecialtyNumber}    % Диссертация, специальность, номер
+{15.03.06}
+\newcommand{\thesisSpecialtyTitle}     % Диссертация, специальность, название (название взято с сайта ВАК для примера)
+{Мехатроника и робототехника}
+\newcommand{\thesisDegree}             % Диссертация, ученая степень
+{бакалавра}
+\newcommand{\thesisDegreeShort}        % Диссертация, ученая степень, краткая запись
+{бак.}
+\newcommand{\thesisCity}               % Диссертация, город написания диссертации
+{Москва}
+\newcommand{\thesisYear}               % Диссертация, год написания диссертации
+{\the\year}
+\newcommand{\thesisOrganization}       % Диссертация, организация
+{
+  Федеральное Государственное Бюджетное
+  Образовательное Учреждение Высшего Образования <<Национальный
+  Исследовательский Университет <<МЭИ>>
+}
+
+
+\newcommand{\supervisorFio}              % Научный руководитель, ФИО
+{Адамов Борис Игоревич}
+\newcommand{\supervisorRegalia}          % Научный руководитель, регалии
+{доц.}
+\newcommand{\supervisorFioShort}         % Научный руководитель, ФИО
+{Б. И. Адамов}
+\newcommand{\supervisorRegaliaShort}     % Научный руководитель, регалии
+{доц.}
+
+\newcommand{\wideunderline}[2][2em]{%
+  \underline{\makebox[\ifdim\width>#1\width\else#1\fi]{#2}}%
+}

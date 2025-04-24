@@ -3,6 +3,7 @@ import time
 import cv2
 import numpy as np
 
+# SECTION INIT_CAP BEGIN
 class CaptureDetector():
 
     def __init__(self, capture:cv2.VideoCapture, model_path:str='hand_landmarker.task'):
@@ -15,7 +16,9 @@ class CaptureDetector():
             capture.get(cv2.CAP_PROP_FRAME_WIDTH),
             capture.get(cv2.CAP_PROP_FRAME_HEIGHT)
         )
+# SECTION INIT_CAP END
 
+# SECTION INIT_TASK BEGIN
         # create options for landmarker
         base_options = mp.tasks.BaseOptions
         hand_landmarker_options = mp.tasks.vision.HandLandmarkerOptions
@@ -28,8 +31,10 @@ class CaptureDetector():
 
         landmarker = mp.tasks.vision.HandLandmarker
         self.landmarker = landmarker.create_from_options(self.options)
+# SECTION INIT_TASK END
 
-    def process_one_frame(self):
+# SECTION FRAME_PREPROCESS BEGIN
+    def process_one_frame(self, return_frame:bool=True):
         # read frame
         ret, frame = self.cap.read()
         
@@ -46,22 +51,35 @@ class CaptureDetector():
             image_format=mp.ImageFormat.SRGB,
             data=frame
             )
+# SECTION FRAME_PREPROCESS END
 
+# SECTION GET_TIME BEGIN
         # add timestamp
         timestamp_ms = self.cap.get(cv2.CAP_PROP_POS_MSEC)
+# SECTION GET_TIME END
 
+# SECTION GET_DETECTION BEGIN
         # get detection result
         detection_result = self.landmarker.detect_for_video(
             mp_image,
             int(timestamp_ms)
         )
+# SECTION GET_DETECTION END
 
-        # convert back to rgb
-        frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+# SECTION FRAME_CONVERSION BEGIN
+        if return_frame:
+            # convert back to rgb
+            frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+        else:
+            frame = None
+# SECTION FRAME_CONVERSION END
 
+# SECTION DETECTION_CHECK BEGIN
         if len(detection_result.hand_landmarks) == 0:
             return [], frame
+# SECTION DETECTION_CHECK END
 
+# SECTION RESULT_PREPARATION BEGIN
         landmarks = detection_result.hand_landmarks[0]
         points_array = np.zeros((len(landmarks), 2), dtype=np.int16)
         for idx in range(len(landmarks)):
@@ -70,10 +88,13 @@ class CaptureDetector():
                 int(landmarks[idx].y * self.image_size[1])
                 ]
         
-
         # return landmarks
         return points_array, frame
+# SECTION RESULT_PREPARATION END
 
+# SECTION DESTRUCTOR BEGIN
     def __del__(self):
         self.landmarker.close()
         self.cap.release()
+# SECTION DESTRUCTOR END
+
