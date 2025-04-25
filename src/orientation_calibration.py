@@ -6,8 +6,9 @@ import numpy as np
 
 from utils.file_utils import (
     create_capture_from_json, 
-    create_charuco_from_json
-)
+    load_intr_with_minimal_error
+    )
+from utils.draw_utils import draw_text
 
 def click_callback(event, x, y, flags, param):
     if event == cv2.EVENT_LBUTTONDOWN:
@@ -63,7 +64,7 @@ def main():
         help='path to .pkl file with data from intrinsics calibration.' +
             'Must correspond to cam_ids', 
         nargs='+',
-        required=True
+        required=False
         )
 # SECTION INTRINSICS_FILES END
 
@@ -72,7 +73,7 @@ def main():
         '-o', '--output', 
         help='Path to output file.', 
         type=str, 
-        default='orientation'
+        default='calibration_data/orientation'
     )
 # SECTION OUTNAME END
 
@@ -127,10 +128,11 @@ def main():
 # SECTION PREP_CAMS END
 
 # SECTION LOAD_INTR BEGIN
-    # load intrinsics
-    intrinsics_files = args.intrinsics_files
     cam_matrices = list()
     dist_coeffs = list()
+    intrinsics_files = args.intrinsics_files
+
+    # load intrinsics
     for intr_file in intrinsics_files:
         with open(intr_file, 'rb') as intr_input:
             cam_intrinsics = pickle.load(intr_input)
@@ -222,6 +224,7 @@ def main():
                     thickness=10
                 )
             cur_window_name = f'source:{input_sources[idx]}'
+            draw_text(frame, cur_window_name)
             cv2.imshow(cur_window_name, cv2.resize(frame, dsize=(None), fx=scale, fy=scale))
             cv2.setMouseCallback(cur_window_name, click_callback)
             idx += 1
