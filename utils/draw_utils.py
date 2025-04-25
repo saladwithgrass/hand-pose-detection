@@ -80,3 +80,20 @@ def draw_hand_on_image(
                     color=cur_color,
                     thickness=2
                 )
+
+def draw_text(img:np.ndarray, text:str):
+    font                   = cv2.FONT_HERSHEY_SIMPLEX
+    bottomLeftCornerOfText = (10, img.shape[0] - 10)
+    fontScale              = 2
+    fontColor              = (0,255,0)
+    thickness              = 3
+    lineType               = 2
+    
+    cv2.putText(img, text,
+        bottomLeftCornerOfText, 
+        font, 
+        fontScale,
+        fontColor,
+        thickness,
+        lineType)
+

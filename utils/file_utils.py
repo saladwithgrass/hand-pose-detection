@@ -1,6 +1,8 @@
 import pickle
 import json
 import cv2
+import glob
+import numpy as np
 
 def load_json_as_dict(path:str) -> dict:
     with open(path, 'r') as input_file:
@@ -62,3 +64,22 @@ def load_camera_intrinsics(path_to_file:str):
         height = intr_dict['image_height']
         return cam_matrix, dist_coeffs, width, height
 
+<<<<<<< HEAD
+=======
+def load_intr_with_minimal_error(cam_id:str):
+    candidates = glob.glob(f'../calibration_data/calibration_{cam_id}*.pkl')
+    error_kw = 'error='
+
+    candidates_with_errors = {}
+
+    for candidate in candidates:
+        error_position = candidate.find(error_kw)
+        error_string = candidate.removesuffix('.pkl')[error_position + len(error_kw):]
+        if error_string.isnumeric():
+            candidates_with_errors[float(error_string)] = candidate
+    
+    min_error = np.min(list(candidates_with_errors.keys()))
+    selected_candidate = candidates_with_errors[min_error]
+    return selected_candidate
+    
+>>>>>>> 711a6f1 (reorganized files and started work on gripper conversion hierarchy)
