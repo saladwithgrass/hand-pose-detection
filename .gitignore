@@ -13,3 +13,4 @@ calibration/orientation*.pkl
 **.run.xml
 **.synctex.gz
 **.xdv
+**out
