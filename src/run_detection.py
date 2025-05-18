@@ -2,7 +2,8 @@ import time
 import cv2
 import argparse
 import sys
-sys.path.append('../')
+import os
+print(os.curdir)
 from utils.draw_utils import (
     load_connections,
     load_colors,
@@ -10,7 +11,7 @@ from utils.draw_utils import (
 )
 from utils import connection_dict, colors_dict
 import sys
-from capture_detector import CaptureDetector
+from detection.capture_detector import CaptureDetector
 from threading import Thread
 
 def error(*args, **kwargs):

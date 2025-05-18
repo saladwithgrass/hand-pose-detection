@@ -2,9 +2,9 @@ import cv2
 import numpy as np
 import argparse
 import pickle
-
-import sys
-sys.path.append('../')
+import os
+print(os.curdir)
+import utils
 from utils.file_utils import (
     create_capture_from_json,
     create_charuco_from_json

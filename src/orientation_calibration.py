@@ -4,12 +4,10 @@ import argparse
 import cv2.aruco as aruco
 import numpy as np
 
-import sys
-sys.path.append('../')
 from utils.file_utils import (
     create_capture_from_json, 
     create_charuco_from_json
-    )
+)
 
 def click_callback(event, x, y, flags, param):
     if event == cv2.EVENT_LBUTTONDOWN:
