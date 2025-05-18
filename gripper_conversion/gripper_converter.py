@@ -1,8 +1,13 @@
 import json
 import numpy as np
 
+def normalize(vector):
+    norm = np.linalg.norm(vector)
+    if norm == 0:
+        return vector
+    return vector / norm
 
-class DummyGripperConverter():
+class GripperConverter():
     """
     Used to determine the orientation and position of the end effector.
     """
