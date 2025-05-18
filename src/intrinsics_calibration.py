@@ -2,9 +2,6 @@ import cv2
 import numpy as np
 import argparse
 import pickle
-import os
-print(os.curdir)
-import utils
 from utils.file_utils import (
     create_capture_from_json,
     create_charuco_from_json
@@ -49,7 +46,7 @@ def main():
         '-cj',
         '--capture_json',
         help='Path to json with capture parameters',
-        default='../config/capture_params.json'
+        default='config/capture_params.json'
     )
 # SECTION CAPTUREJSON END
 
