@@ -13,7 +13,7 @@ from utils.file_utils import create_capture_from_json
 from triangulator import create_triangulator_from_files
 from detection.capture_detector import CaptureDetector
 from utils.draw_utils import draw_hand_on_image
-from gripper_converter import GripperConverter
+from gripper_conversion.gripper_converter import GripperConverter
 
 def main():
     parser = argparse.ArgumentParser()
