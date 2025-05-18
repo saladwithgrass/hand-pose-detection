@@ -141,15 +141,6 @@ def main():
         # display result
         cv2.imshow('huh', cv2.resize(image, dsize=None, fx=0.3, fy=0.3))
 # SECTION DISPLAY END
-        
-# SECTION WAITKEY BEGIN
-        # wait and get key
-        key = cv2.waitKey(1)
-            
-        # if key is esc, then break
-        if key == 27:
-            break
-# SECTION WAITKEY END
 
 # SECTION SAVEPOINTS BEGIN
         enough_corners_detected = len(charuco_corners) > 11
@@ -168,6 +159,15 @@ def main():
             all_image_points.append(cur_image_points)
             all_object_points.append(cur_object_points)
 # SECTION SAVEPOINTS END
+
+# SECTION WAITKEY BEGIN
+        # wait and get key
+        key = cv2.waitKey(1)
+            
+        # if key is esc, then break
+        if key == 27:
+            break
+# SECTION WAITKEY END
             
 # SECTION CV2CLOSE BEGIN
     # release camera and close window
