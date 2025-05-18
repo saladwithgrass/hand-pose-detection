@@ -1,0 +1,15 @@
+texinfo
+texlab
+texlive-basic
+texlive-bibtexextra
+texlive-bin
+texlive-binextra
+texlive-fontsrecommended
+texlive-langcyrillic
+texlive-latex
+texlive-latexextra
+texlive-latexrecommended
+texlive-mathscience
+texlive-pictures
+texlive-plaingeneric
+texlive-xetex
