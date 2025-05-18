@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import sys
-sys.path.append('../')
-from utils.draw_utils import load_colors, load_connections
+from utils.draw_utils import load_colors_and_connections
+
 class Visualizer3D():
     
     def __init__(self):
@@ -18,10 +18,8 @@ class Visualizer3D():
         self.Y_CENTER = 0
         self.Z_CENTER = 200
         
-        # load hand connections
-        self.hierarchy_dict = load_connections('../config/hand_connections.json')
-        # load finger colors
-        self.color_dict = load_colors('../config/hand_colors.json', '../config/hand_connections.json')
+        # load hand connections and colors
+        self.color_dict, self.hierarchy_dict = load_colors_and_connections('config/hand_colors.json', 'config/hand_connections.json')
 
         # prepare axes 
         self.set_axes()

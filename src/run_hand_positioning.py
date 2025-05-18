@@ -11,18 +11,60 @@ from utils.file_utils import create_capture_from_json
 from positioning.triangulator import create_triangulator_from_files
 from detection.capture_detector import CaptureDetector
 from utils.draw_utils import draw_hand_on_image
-from gripper_conversion.gripper_converter import GripperConverter
+from gripper_conversion.dummy_gripper_converter import DummyGripperConverter as GripperConverter
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('cam_ids', help='Device id of camera to capture.', type=int, nargs=2)
-    parser.add_argument('-cj', '--capture_json', help='Path to json with capture parameters', default='../config/capture_params.json')
-    parser.add_argument('-ci', '--camera-intrinsics', help='Path to .pkl file with camera intrinsic parameters.', required=True, nargs=2)
-    parser.add_argument('-or', '--orientation', help='Path to .pkl file with camera position parameters.', required=True, nargs=2)
-    parser.add_argument('-nt', '--num-threads', type=int, default=8)
-    parser.add_argument('-sc', '--show-video', help='If set, will display images from cameras.', action='store_true')
-    parser.add_argument('-ds', '--display-scale', help='Scale of images from camera if they will be displayed.', type=float)
-    parser.add_argument('-sh', '--show-hands', help='If set, will also display 3d representation of detected hands.', action='store_true')
+    parser.add_argument(
+        'cam_ids',
+        help='Device id of camera to capture.',
+        type=int,
+        nargs=2
+    )
+    parser.add_argument(
+        '-cj',
+        '--capture_json',
+        help='Path to json with capture parameters',
+        default='config/capture_params.json'
+    )
+    parser.add_argument(
+        '-ci',
+        '--camera-intrinsics',
+        help='Path to .pkl file with camera intrinsic parameters.',
+        required=True,
+        nargs=2
+    )
+    parser.add_argument(
+        '-or',
+        '--orientation',
+        help='Path to .pkl file with camera position parameters.',
+        required=True,
+        nargs=2
+    )
+    parser.add_argument(
+        '-nt',
+        '--num-threads',
+        type=int,
+        default=8
+    )
+    parser.add_argument(
+        '-sc',
+        '--show-video',
+        help='If set, will display images from cameras.',
+        action='store_true'
+    )
+    parser.add_argument(
+        '-ds',
+        '--display-scale',
+        help='Scale of images from camera if they will be displayed.',
+        type=float
+    )
+    parser.add_argument(
+        '-sh',
+        '--show-hands',
+        help='If set, will also display 3d representation of detected hands.',
+        action='store_true'
+    )
 
     args = parser.parse_args()
     
@@ -43,7 +85,7 @@ def main():
     # create detectors for each capture
     detectors:list[CaptureDetector] = []
     for cap in caps:
-        detectors.append(CaptureDetector(cap, '../detection/hand_landmarker.task')) 
+        detectors.append(CaptureDetector(cap, 'detection/hand_landmarker.task')) 
     
     # create triangulator
     triangulator = create_triangulator_from_files(
@@ -55,7 +97,7 @@ def main():
     visualizer = Visualizer3D()
 
     # create converter to gripper
-    gripper_converter = GripperConverter('../config/hand_connections.json')
+    gripper_converter = GripperConverter('config/hand_connections.json')
     gripper_converter.set_orientation_index_z()
 
     frames = [None, None]
