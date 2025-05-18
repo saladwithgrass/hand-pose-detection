@@ -18,12 +18,12 @@ def main():
 # SECTION CAMID END
 
 # SECTION NAMEARGS BEGIN
-    # parser.add_argument(
-    #     '-ne',
-    #     '--no-error-name',
-    #     help='Prevents error from being added to the name of ouput.',
-    #     action='store_true'
-    # )
+    parser.add_argument(
+        '-ne',
+        '--no-error-name',
+        help='Prevents error from being added to the name of ouput.',
+        action='store_true'
+    )
     parser.add_argument(
         '-nf',
         '--no-frames-name',
@@ -194,7 +194,7 @@ def main():
 
     file_name = args.output
     if file_name is None:
-        file_name = f'../calibration_data/calibration_{cam_id}'
+        file_name = f'calibration_{cam_id}'
     
     if not args.no_frames_name:
         file_name = file_name + f'_frames={calibration_counter}'
