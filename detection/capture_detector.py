@@ -1,12 +1,16 @@
 import mediapipe as mp
-import time
 import cv2
 import numpy as np
+from utils.draw_utils import draw_hand_on_image
 
 # SECTION INIT_CAP BEGIN
 class CaptureDetector():
 
-    def __init__(self, capture:cv2.VideoCapture, model_path:str='hand_landmarker.task'):
+    def __init__(
+        self,
+        capture:cv2.VideoCapture,
+        model_path:str='hand_landmarker.task'
+    ):
 
         # add capture to a class member
         self.cap:cv2.VideoCapture = capture
@@ -20,11 +24,11 @@ class CaptureDetector():
 
 # SECTION INIT_TASK BEGIN
         # create options for landmarker
-        base_options = mp.tasks.BaseOptions
+        base_options = mp.tasks.BaseOptions(model_asset_path=model_path)
         hand_landmarker_options = mp.tasks.vision.HandLandmarkerOptions
         running_mode = mp.tasks.vision.RunningMode.VIDEO
         self.options = hand_landmarker_options(
-            base_options=base_options(model_asset_path=model_path),
+            base_options=base_options,
             running_mode=running_mode,
             num_hands=1
         )
@@ -41,7 +45,7 @@ class CaptureDetector():
         # check if read happened
         if not ret:
             print('OUT OF FRAMES')
-            return np.array([])
+            raise Exception()
 
         # convert to rgb
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -70,6 +74,7 @@ class CaptureDetector():
         if return_frame:
             # convert back to rgb
             frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+            
         else:
             frame = None
 # SECTION FRAME_CONVERSION END

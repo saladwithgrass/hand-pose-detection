@@ -1,11 +1,14 @@
-import mediapipe as mp
 import time
-from mediapipe.tasks import python
-from mediapipe.tasks.python import vision
 import cv2
 import argparse
-from utils.draw_results import load_connections, load_colors, draw_detection_result, draw_hand_landmarks_on_live
-import numpy as np
+import sys
+sys.path.append('../')
+from utils.draw_utils import (
+    load_connections,
+    load_colors,
+    draw_hand_on_image,
+)
+from utils import connection_dict, colors_dict
 import sys
 from capture_detector import CaptureDetector
 from threading import Thread
@@ -18,15 +21,42 @@ def run_detector_frame_processing(
         detector_id:int, 
         result:list
         ):
-    result[detector_id] = detector.process_one_frame()
+    landmarks, result[detector_id] = detector.process_one_frame(return_frame=True)
+    draw_hand_on_image(frame, landmarks, )
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('source_type', help='defines type of input stream: video or camera', choices=('cam', 'vid'))
-    parser.add_argument('sources', help='list of input sources', nargs='+')
-    parser.add_argument('-dev', '--by-dev', help='Specifies whether cameras sould be identified by their file in /dev', required=False, action='store_true')
-    parser.add_argument('-b', '--buffer-size', help='Specifies buffer size for input streams', type=int, default=4)
-    parser.add_argument('-fps', '--framerate', help='Specifies desired framerate', type=int, default=30)
+    parser.add_argument(
+        'source_type', 
+        help='defines type of input stream: video or camera', 
+        choices=('cam', 'vid')
+    )
+    parser.add_argument(
+        'sources', 
+        help='list of input sources', 
+        nargs='+'
+    )
+    parser.add_argument(
+        '-dev',
+        '--by-dev',
+        help='Specifies whether cameras sould be identified by their file in /dev',
+        required=False,
+        action='store_true'
+    )
+    parser.add_argument(
+        '-b',
+        '--buffer-size',
+        help='Specifies buffer size for input streams',
+        type=int,
+        default=4
+    )
+    parser.add_argument(
+        '-fps',
+        '--framerate',
+        help='Specifies desired framerate',
+        type=int,
+        default=30
+    )
     args = parser.parse_args()
 
     caps = list()
@@ -83,6 +113,7 @@ def main():
         for frame_id in range(len(captured_frames)):
             if len(captured_frames[frame_id]) == 0:
                 all_ok = False
+            print(type(captured_frames[frame_id][0]))
             cv2.imshow(f'frame {frame_id}', captured_frames[frame_id])
 
         # wait to sync fps

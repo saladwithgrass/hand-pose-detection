@@ -1,8 +1,6 @@
 import cv2
 import mediapipe as mp
 import json
-from mediapipe import solutions
-from mediapipe.framework.formats import landmark_pb2
 import numpy as np
 import matplotlib.colors as mcolors
 
@@ -51,7 +49,12 @@ def load_colors(path_to_colors:str, path_to_hierarchy:str):
     joint_color_dict[finger_color_dict['wrist']].append(joint_color_dict[finger_color_dict['wrist']][0])
     return joint_color_dict
 
-def draw_hand_on_image(image, landmarks, color_dict:dict, hierarchy_dict:dict):
+def draw_hand_on_image(
+    image, 
+    landmarks,
+    color_dict:dict, 
+    hierarchy_dict:dict
+):
     for color, indexes in color_dict.items():
         cur_color = mcolors.to_rgb(color)
         cur_color = tuple(int(x * 255) for x in cur_color)

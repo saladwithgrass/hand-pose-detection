@@ -13,3 +13,4 @@ texlive-mathscience
 texlive-pictures
 texlive-plaingeneric
 texlive-xetex
+texlive-luatex
