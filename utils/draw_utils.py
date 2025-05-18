@@ -32,9 +32,9 @@ def str_to_color(color_str:str):
     color_str = color_str.replace('#', '')
     return (int(color_str[0:2], 16), int(color_str[2:4], 16), int(color_str[4:6], 16))
 
-def load_colors(path_to_colors:str, path_to_hierarchy:str):
+def load_colors_and_connections(path_to_colors:str, path_to_hierarchy:str):
     """
-    Loads colors json as a dict.
+    Loads colors and coonnection jsons as a dict.
     The key is color name, the value are the joint indeces
     """
     finger_color_dict = json.load(open(path_to_colors, 'r'))
@@ -47,7 +47,7 @@ def load_colors(path_to_colors:str, path_to_hierarchy:str):
         joint_color_dict[finger_color_dict['wrist']].append(connections[0])
     # make wrist cyclical
     joint_color_dict[finger_color_dict['wrist']].append(joint_color_dict[finger_color_dict['wrist']][0])
-    return joint_color_dict
+    return joint_color_dict, hierarchy_dict
 
 def draw_hand_on_image(
     image, 
