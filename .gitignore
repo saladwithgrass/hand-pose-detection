@@ -14,3 +14,4 @@ calibration/orientation*.pkl
 **.synctex.gz
 **.xdv
 **out
+**egg-info
