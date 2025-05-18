@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=70.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hand-pose-detection"
+version = "2025.05.18"
+description = "Hand pose detection using OpenCV and MediaPipe"
+authors = [ { name = "Egor Skorobogatov", email = "egod09080908@yandex.ru" }
+]
+readme = "README.md"
+requires-python = "==3.12.8"
+license = { text = "GPL" }
+
+dependencies = [
+    "opencv-python",
+    "mediapipe",
+    "numpy",
+]
+
+[project.scripts]
+intrinsics-calibration = "src.intrinsics_calibration:main" 
+orientation-calibration = "src.orientation_calibration:main"
+detection = "src.run_detection:main" 
+hand-positioning = "src.run_hand_positioning:main"
+
+[tool.setuptools.packages]
+find = {}
+
