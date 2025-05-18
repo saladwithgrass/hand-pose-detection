@@ -1,7 +1,0 @@
-{
-    "BOARD_ROWS" : 8,
-    "BOARD_COLS" :  11,
-    "SQUARE_SIZE" : 23,
-    "MARKER_SIZE" : 17,
-    "DICT_NAME" : "DICT_4X4_100"
-} 
