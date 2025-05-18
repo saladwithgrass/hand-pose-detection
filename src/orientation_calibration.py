@@ -6,6 +6,7 @@ import numpy as np
 
 from utils.file_utils import (
     create_capture_from_json, 
+    create_charuco_from_json,
     load_intr_with_minimal_error
     )
 from utils.draw_utils import draw_text
@@ -64,7 +65,7 @@ def main():
         help='path to .pkl file with data from intrinsics calibration.' +
             'Must correspond to cam_ids', 
         nargs='+',
-        required=False
+        required=True
         )
 # SECTION INTRINSICS_FILES END
 
@@ -100,6 +101,7 @@ def main():
     # set some args as variables
     input_sources = args.input_sources
     scale = args.display_scale
+    intrinsics_files = args.intrinsics_files
 
     cv2.setNumThreads(16)
     if len(input_sources) != len(args.intrinsics_files):
@@ -121,7 +123,7 @@ def main():
 
         # open camera captures
         for cam_id in cam_ids:
-            caps.append(create_capture_from_json(int(cam_id), '../config/capture_params.json'))
+            caps.append(create_capture_from_json(int(cam_id), 'config/capture_params.json'))
     else:
         for input_source in input_sources:
             caps.append(cv2.VideoCapture(input_source))
