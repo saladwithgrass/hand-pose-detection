@@ -21,7 +21,7 @@ def load_charuco_parameters(json_path:str):
            params_dict['MARKER_SIZE'], \
            loaded_dict
     
-def create_charuco_from_json(json_path:str='charuco_parameters.json') -> cv2.aruco.CharucoBoard:
+def create_charuco_from_json(json_path:str='config/charuco_parameters.json') -> cv2.aruco.CharucoBoard:
 
     # load aruco parameters
     CHARUCO_BOARD_ROWS, \
@@ -61,3 +61,4 @@ def load_camera_intrinsics(path_to_file:str):
         width = intr_dict['image_width']
         height = intr_dict['image_height']
         return cam_matrix, dist_coeffs, width, height
+
