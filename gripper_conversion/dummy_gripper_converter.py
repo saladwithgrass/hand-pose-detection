@@ -1,8 +1,8 @@
 import json
 import numpy as np
+from gripper_conversion.gripper_converter_interface import normalize
 
-
-class DummyGripperConverter():
+class TestGripperConverter():
     """
     Used to determine the orientation and position of the end effector.
     """

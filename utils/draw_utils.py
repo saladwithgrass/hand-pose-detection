@@ -62,7 +62,6 @@ def join_colors_and_connections(
     colors = load_json_as_dict('config/hand_colors.json')
 
     # create wrist pairs
-    print(connections_dict.keys())
     connections_from_wrist = []
     for finger_name, finger_joints in connections_dict['fingers'].items():
         first_finger_joint = finger_joints[0]
@@ -88,9 +87,11 @@ def draw_hand_on_image(
     image, 
     landmarks
 ):
+    if len(landmarks) == 0:
+        return
     for cur_color, connections in draw_dict.items():
         bgr_color = mcolors.to_rgb(cur_color)
-        bgr_color = tuple(int(x * 255) for x in cur_color)
+        bgr_color = tuple(int(x * 255) for x in bgr_color)
         for cur_connection in connections:
             cv2.circle(
                 img=image,

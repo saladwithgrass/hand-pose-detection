@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-import sys
 from utils.draw_utils import load_colors_and_connections
+
 class Visualizer3D():
     
     def __init__(self):
@@ -114,3 +114,4 @@ class Visualizer3D():
         
         self.set_axes()
         plt.pause(pause)
+

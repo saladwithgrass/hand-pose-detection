@@ -2,12 +2,11 @@ import numpy as np
 import cv2
 import pickle
 
-import sys
-sys.path.append('../')
 from utils.file_utils import create_capture_from_json
 
 class CameraTriangulator():
 
+# SECTION INIT_PARAMS BEGIN
     def __init__(self, 
                     camera_matrices:list[np.ndarray],
                     distortion_coefficients:list[np.ndarray],
@@ -15,8 +14,11 @@ class CameraTriangulator():
                     cameras_tvecs:list[np.ndarray],
                     image_width:int,
                     image_height:int,
-                    cameras_extrinsics:list[np.ndarray] = None
+                    cameras_extrinsics:list[np.ndarray]=None
                 ):
+# SECTION INIT_PARAMS END
+
+# SECTION FIELDS BEGIN
         # create self fields
         self.camera_matrices = camera_matrices
         self.dist_coeffs = distortion_coefficients
@@ -27,7 +29,9 @@ class CameraTriangulator():
         self.undistortMaps = []
         self.projection_matrices = []
         self.extrinsics = cameras_extrinsics
+# SECTION FIELDS END
 
+# SECTION MATR_INIT BEGIN
         # create new optimal camera matrices and undistort maps
         for cam_matrix, dist_coeffs in zip(camera_matrices, distortion_coefficients):
             new_cam_matrix, roi = cv2.getOptimalNewCameraMatrix(
@@ -45,11 +49,15 @@ class CameraTriangulator():
                 size=self.image_size,
                 m1type=cv2.CV_32FC1
             ))
+# SECTION MATR_INIT END
 
+# SECTION PROJ_MATR_INIT BEGIN
         # create projection matrices
         for cam_matrix, rvec, tvec in zip(camera_matrices, cameras_rvecs, cameras_tvecs):
             self.projection_matrices.append(self.create_projection_matrix(rvec, tvec, cam_matrix))
+# SECTION PROJ_MATR_INIT END
 
+# SECTION PROJ_MATR_METHOD BEGIN
     def create_projection_matrix(self, rvec, tvec, cam_matrix):
 
         # reshape tvec hust to be sure
@@ -59,9 +67,10 @@ class CameraTriangulator():
         # create homogenous transform
         homogenous_transform = np.hstack((rvec_matrix, tvec))
         homogenous_transform = np.vstack((homogenous_transform, [0, 0, 0, 1]))
-        # invert homogenous transform
+        # mulatiply homogenous tf by cam matr
         result = cam_matrix @ homogenous_transform[0:3] # be not afraid, sinner, this is just numpy matrix multiplication
         return result
+# SECTION PROJ_MATR_METHOD END
 
     def undistort_image(self, image, camera_index):
         map1, map2 = self.undistortMaps[camera_index]
@@ -76,6 +85,7 @@ class CameraTriangulator():
         # y_undistorted = map2[y_distorted, x_distorted][0]
         return (int(map1[y, x]), int(map2[y, x]))
 
+# SECTION DLT_FUNC BEGIN
     def get_DLT_matrix(self, pixel_positions):
 
         # construct matrix for solving DLT
@@ -92,19 +102,28 @@ class CameraTriangulator():
         DLT_matrix = np.array(DLT_equations)
 
         return DLT_matrix
+# SECTION DLT_FUNC END
 
+# SECTION TRIANG BEGIN
     def triangulate(self, pixel_positions):
+# SECTION TRIANG END
         
+# SECTION GET_DLT BEGIN
         # get DLT matrix
         DLT_matrix = self.get_DLT_matrix(pixel_positions=pixel_positions) 
+# SECTION GET_DLT END
 
+# SECTION SVD BEGIN
         # decompose 
         U, S, Vh = np.linalg.svd(DLT_matrix)
+# SECTION SVD END
 
-        # get last column
+# SECTION SVD_RES BEGIN
+        # get last column and homogenize it
         result_homogenous = Vh[3, :] / Vh[3, 3]
         # print('homo: ', result_homogenous)
         return result_homogenous[0:3]
+# SECTION SVD_RES END
 
     def get_cameras_world_position(self):
 
