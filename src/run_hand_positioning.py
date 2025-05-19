@@ -145,9 +145,7 @@ def main():
                 # draw hand
                 draw_hand_on_image(
                     frames[cam_idx], 
-                    camera_points[cam_idx], 
-                    color_dict=visualizer.color_dict, 
-                    hierarchy_dict=visualizer.hierarchy_dict
+                    camera_points[cam_idx]
                     )
                 # scale image and display it 
                 cv2.imshow(f'huh{idx}', cv2.resize(frames[cam_idx], dsize=None, fx=scale, fy=scale))

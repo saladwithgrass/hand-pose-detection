@@ -2,14 +2,9 @@ import time
 import cv2
 import argparse
 import sys
-import os
-print(os.curdir)
 from utils.draw_utils import (
-    load_connections,
-    load_colors,
-    draw_hand_on_image,
+    draw_hand_on_image
 )
-from utils import connection_dict, colors_dict
 import sys
 from detection.capture_detector import CaptureDetector
 from threading import Thread
@@ -23,7 +18,10 @@ def run_detector_frame_processing(
         result:list
         ):
     landmarks, result[detector_id] = detector.process_one_frame(return_frame=True)
-    draw_hand_on_image(frame, landmarks, )
+    draw_hand_on_image(
+        result[detector_id],
+        landmarks
+    )
 
 def main():
     parser = argparse.ArgumentParser()
@@ -79,7 +77,7 @@ def main():
             cur_cap.set(cv2.CAP_PROP_BUFFERSIZE, buffer_size)
             caps.append(cur_cap)
 
-    model_path = 'hand_landmarker.task'
+    model_path = 'detection/hand_landmarker.task'
 
     # create detectors
     detectors = list()

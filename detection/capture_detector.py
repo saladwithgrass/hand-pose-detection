@@ -1,7 +1,6 @@
 import mediapipe as mp
 import cv2
 import numpy as np
-from utils.draw_utils import draw_hand_on_image
 
 # SECTION INIT_CAP BEGIN
 class CaptureDetector():
@@ -9,7 +8,7 @@ class CaptureDetector():
     def __init__(
         self,
         capture:cv2.VideoCapture,
-        model_path:str='hand_landmarker.task'
+        model_path:str='detection/hand_landmarker.task'
     ):
 
         # add capture to a class member
