@@ -1,10 +1,10 @@
 **/__pycache__/
 handpose3d
-calibration/orientation*.pkl
+calibration_data/orientation*.pkl
 .vscode
 **.aux
 **.bbl
-**.bcf
+**.bcf*
 **.blg
 **.fdb_latexmk
 **.fls
