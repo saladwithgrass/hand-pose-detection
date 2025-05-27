@@ -3,6 +3,7 @@ import numpy as np
 
 from utils.draw_utils import load_colors_and_connections
 
+# SECTION INIT BEGIN
 class Visualizer3D():
     
     def __init__(self):
@@ -22,7 +23,9 @@ class Visualizer3D():
 
         # prepare axes 
         self.set_axes()
+# SECTION INIT END
         
+# SECTION SET_AXES BEGIN
     def set_axes(self):
         # set labels
         self.ax.set_xlabel('X')
@@ -32,7 +35,9 @@ class Visualizer3D():
         self.ax.set_xlim3d([-self.MAX_DIM + self.X_CENTER, self.MAX_DIM + self.X_CENTER])
         self.ax.set_ylim3d([-self.MAX_DIM + self.Y_CENTER, self.MAX_DIM + self.Y_CENTER])
         self.ax.set_zlim3d([-self.MAX_DIM + self.Z_CENTER, self.MAX_DIM + self.Z_CENTER])
+# SECTION SET_AXES END
 
+# SECTION DRAW_HAND BEGIN
     def draw_hand(self, landmarks):
         # check if there's something to be drawn
         if len(landmarks) == 0:
@@ -49,7 +54,9 @@ class Visualizer3D():
                 color=color,
                 marker='o'
                 )
+# SECTION DRAW_HAND END
 
+# SECTION DRAW_COORDINATES BEGIN
     def draw_coordinates(self, axes, center, line_width=4):
         # extract axes
         x_axis = axes[0]*50 + center
@@ -82,8 +89,18 @@ class Visualizer3D():
             color="blue",
             linewidth=line_width
         )
+# SECTION DRAW_COORDINATES END
 
-    def update_points(self, joint_coordinates=None, axes=None, axes_center=None, pause = 0.01, cameras=None, camera_colors=None):
+# SECTION UPDATE BEGIN
+    def update_points(
+            self, 
+            joint_coordinates=None, 
+            axes=None, 
+            axes_center=None, 
+            pause = 0.01, 
+            cameras=None, 
+            camera_colors=None
+        ):
         """
         Takes and array of 3d vectors with point coordinates.
         Updates plot.
@@ -110,7 +127,14 @@ class Visualizer3D():
                 cam_xs = cameras[0][camera_idx]
                 cam_ys = cameras[1][camera_idx]
                 cam_zs = cameras[2][camera_idx]
-                self.ax.plot(xs=cam_xs, ys=cam_ys, zs=cam_zs, color=camera_colors[camera_idx], marker='x', linestyle='None')
+                self.ax.plot(
+                    xs=cam_xs, 
+                    ys=cam_ys, 
+                    zs=cam_zs, 
+                    color=camera_colors[camera_idx], 
+                    marker='x', 
+                    linestyle='None'
+                )
         
         self.set_axes()
         plt.pause(pause)

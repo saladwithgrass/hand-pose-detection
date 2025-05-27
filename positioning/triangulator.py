@@ -18,6 +18,7 @@ class CameraTriangulator():
                 ):
 # SECTION INIT_PARAMS END
 
+
 # SECTION FIELDS BEGIN
         # create self fields
         self.camera_matrices = camera_matrices
