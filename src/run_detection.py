@@ -125,7 +125,7 @@ def main():
         # get results for each thread
         for thread in threads:
             thread.join()
-# SECTION RUN_DETECT END
+# SECTION GET_DETECT END
 
 # SECTION DISPLAY BEGIN
         # show results for each input

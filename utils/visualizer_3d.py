@@ -19,7 +19,10 @@ class Visualizer3D():
         self.Z_CENTER = 200
         
         # load finger colors
-        self.color_dict, _ = load_colors_and_connections('config/hand_colors.json', 'config/hand_connections.json')
+        self.color_dict, _ = load_colors_and_connections(
+            'config/hand_colors.json', 
+            'config/hand_connections.json'
+        )
 
         # prepare axes 
         self.set_axes()
@@ -43,7 +46,6 @@ class Visualizer3D():
         if len(landmarks) == 0:
             return
         landmarks = np.array(landmarks)
-        # make wrist cyclical
         # draw in each color
         for color, indexes in self.color_dict.items():
             cur_vectors = landmarks[indexes]
@@ -91,7 +93,7 @@ class Visualizer3D():
         )
 # SECTION DRAW_COORDINATES END
 
-# SECTION UPDATE BEGIN
+# SECTION UPDATE_PARAMETERS BEGIN
     def update_points(
             self, 
             joint_coordinates=None, 
@@ -105,18 +107,26 @@ class Visualizer3D():
         Takes and array of 3d vectors with point coordinates.
         Updates plot.
         """
+# SECTION UPDATE_PARAMETERS END
 
+# SECTION CLEAR BEGIN
         # clear previous drawings
         self.ax.cla()
+# SECTION CLEAR END
 
+# SECTION DRAW_HAND_UPDATE BEGIN
         # draw the hand if it is needed
         if joint_coordinates is not None:
             self.draw_hand(joint_coordinates) 
+# SECTION DRAW_HAND_UPDATE END
 
+# SECTION DRAW_ORIENTATION BEGIN
         # draw end effector orientation
         if axes is not None and axes_center is not None:
             self.draw_coordinates(axes, axes_center)
+# SECTION DRAW_ORIENTATION END
 
+# SECTION DRAW_CAMERAS BEGIN
         # draw cameras if they exist
         if cameras is not None:
             if camera_colors is None:
@@ -135,7 +145,10 @@ class Visualizer3D():
                     marker='x', 
                     linestyle='None'
                 )
+# SECTION DRAW_CAMERAS END
         
+# SECTION SET_AXES BEIGN
         self.set_axes()
         plt.pause(pause)
+# SECTION SET_AXES END
 

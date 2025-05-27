@@ -1,26 +1,27 @@
-@inproceedings{umi,
-	title={Universal Manipulation Interface: In-The-Wild Robot Teaching Without In-The-Wild Robots}, author={Chi, Cheng and Xu, Zhenjia and Pan, Chuer and Cousineau, Eric and Burchfiel, Benjamin and Feng, Siyuan and Tedrake, Russ and Song, Shuran},
-	booktitle={Proceedings of Robotics: Science and Systems (RSS)},
-	year={2024}
+@article{teleop-survey,
+  title={A survey on teleoperation},
+  author={Lichiardopol, S},
+  year={2007},
+  publisher={Technische Universiteit Eindhoven}
 }
-
-@misc{interhand,
-      title={InterHand2.6M: A Dataset and Baseline for 3D Interacting Hand Pose Estimation from a Single RGB Image}, 
-      author={Gyeongsik Moon and Shoou-i Yu and He Wen and Takaaki Shiratori and Kyoung Mu Lee},
-      year={2020},
-      eprint={2008.09309},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2008.09309}, 
-}
-@misc{anyteleop,
-      title={AnyTeleop: A General Vision-Based Dexterous Robot Arm-Hand Teleoperation System}, 
-      author={Yuzhe Qin and Wei Yang and Binghao Huang and Karl Van Wyk and Hao Su and Xiaolong Wang and Yu-Wei Chao and Dieter Fox},
-      year={2024},
-      eprint={2307.04577},
-      archivePrefix={arXiv},
-      primaryClass={cs.RO},
-      url={https://arxiv.org/abs/2307.04577}, 
+@ARTICLE{model-teleop,
+  author={Xu, Xiao and Cizmeci, Burak and Schuwerk, Clemens and Steinbach, Eckehard},
+  journal={IEEE Access}, 
+  title={Model-Mediated Teleoperation: Toward Stable and Transparent Teleoperation Systems}, 
+  year={2016},
+  volume={4},
+  number={},
+  pages={425-449},
+  keywords={
+    Delays; Teleoperation; Haptic interfaces; Stability analysis; Computer
+    architecture; Impedance; Computational modeling; TIme delay; Model-mediated
+    teleoperation; tele-haptics; time-delayed teleoperation; stability and
+    transparency; parameter estimation; haptic data reduction; model update;
+    Model-mediated teleoperation; tele-haptics; time-delayed teleoperation;
+    stability and transparency; parameter estimation; haptic data reduction;
+    model update
+  },
+  doi={10.1109/ACCESS.2016.2517926}
 }
 
 @misc{multiviewbootstrapping,
@@ -32,16 +33,43 @@
       primaryClass={cs.CV},
       url={https://arxiv.org/abs/1704.07809}, 
 }
-@ARTICLE{zhang2000flexible,
-  author = {Zhang, Zhengyou},
-  title = {A flexible new technique for camera calibration},
-  journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
-  year = {2000},
-  volume = {22},
-  number = {11},
-  pages = {1330-1334}
+@misc{interhand,
+      title={InterHand2.6M: A Dataset and Baseline for 3D Interacting Hand Pose Estimation from a Single RGB Image}, 
+      author={Gyeongsik Moon and Shoou-i Yu and He Wen and Takaaki Shiratori and Kyoung Mu Lee},
+      year={2020},
+      eprint={2008.09309},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2008.09309}, 
 }
-@misc{lugaresi2019mediapipe,
+@ARTICLE{dl-depth-estimation,
+  author={Laga, Hamid and Jospin, Laurent Valentin and Boussaid, Farid and Bennamoun, Mohammed},
+  journal={IEEE Transactions on Pattern Analysis and Machine Intelligence}, 
+  title={A Survey on Deep Learning Techniques for Stereo-Based Depth Estimation}, 
+  year={2022},
+  volume={44},
+  number={4},
+  pages={1738-1764},
+  keywords={
+    Estimation;
+    Videos;
+    Deep learning;
+    Three-dimensional displays;
+    Australia;
+    Training;
+    Pipelines;
+    CNN;
+    deep learning;
+    3D reconstruction;
+    stereo matching;
+    multi-view stereo;
+    disparity estimation;
+    feature leaning;
+    feature matching
+  },
+  doi={10.1109/TPAMI.2020.3032602}
+}
+@misc{mediapipe_paper,
   title={MediaPipe: A Framework for Building Perception Pipelines},
   author={Lugaresi, Matteo and Tang, Jiuqiang and Nash, Hadon and McClanahan, Chris and Uboweja, Esha and Hays, Michael and Zhang, Feng and Chang, Chuo-Ling and Yong, Ming and Lee, Juhyun and others},
   year={2019},
@@ -49,64 +77,11 @@
   archivePrefix={arXiv},
   primaryClass={cs.CV}
 }
-@BOOK{hartley2003multiple,
-  AUTHOR = {Hartley, Richard and Zisserman, Andrew},
-  TITLE = {Multiple View Geometry in Computer Vision},
-  PUBLISHER = {Cambridge University Press},
-  YEAR = {2003}
-}
-@ARTICLE{bradski2000opencv,
-  author = {Bradski, Gary R.},
-  title = {The OpenCV Library},
-  journal = {Dr. Dobb's Journal of Software Tools},
-  year = {2000}
-}
-
-@ARTICLE{faugeras1993three,
-  author = {Faugeras, Olivier and Luong, Quang-Tuan and Maybank, Steven},
-  title = {Camera self-calibration: theory and experiments},
-  journal = {Image and Vision Computing},
-  year = {1993},
-  volume = {11},
-  number = {6},
-  pages = {321-334}
-}
 @article{mediapipe_hands,
   title={MediaPipe Hands: On-device Real-time Hand Tracking},
   author={Google Research},
   year={2020},
   url={https://ai.googleblog.com/2020/08/on-device-real-time-hand-tracking-with.html}
-}
-
-@techreport{opencv_charuco, title={Accurate Camera Calibration Using ChArUco Boards}, author={OpenCV Documentation},
-  year={2023},
-  url={https://docs.opencv.org/4.x/df/d4a/tutorial_charuco_detection.html}
-}
-
-@book{multiview_cv,
-  title={Multiple View Geometry in Computer Vision},
-  author={Hartley, Richard and Zisserman, Andrew},
-  edition={2-е издание.},
-  year={2003},
-  publisher={Cambridge University Press},
-  isbn={0521540518}
-}
-
-@inproceedings{gesture_control,
-  title={Hand Gesture Recognition for Robotic Control},
-  author={Smith, John and Doe, Jane},
-  booktitle={IEEE International Conference on Robotics and Automation (ICRA)},
-  year={2021},
-  pages={1234--1240},
-  doi={10.1109/ICRA48506.2021.9561234}
-}
-
-@misc{opencv_calibration_tutorial,
-  author = {OpenCV Contributors},
-  title = {Camera Calibration and 3D Reconstruction (OpenCV Tutorial)},
-  year = {2024},
-  url = {https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html},
-  howpublished = {OpenCV Documentation}
 }
 
 @misc{opencv_rodrigues,
@@ -116,41 +91,6 @@
   url = {https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html#ga61585db663d9da06b68e70cfbf6a1eac},
   howpublished = {OpenCV Library Documentation}
 }
-
-@misc{opencv_charuco_pose,
-  author = {OpenCV Contributors},
-  title = {{OpenCV Documentation: cv::aruco::estimatePoseCharucoBoard}},
-  year = {2024},
-  url = {https://docs.opencv.org/4.x/d9/d6a/group__aruco.html#ga21b51b9e8c6422a4bac27e48fa0a150b}
-}
-
-@misc{dlt_temugeb,
-  author = {Temuge Batpurev},
-  title = {Direct Linear Transform (DLT)},
-  year = {2021},
-  url = {https://temugeb.github.io/computer_vision/2021/02/06/direct-linear-transorms.html},
-  howpublished = {Personal Blog},
-  journal = {Temuge's Computer Vision Blog},
-  month = {February},
-  day = {6}
-}
-
-@misc{numpy_svd,
-  author = {{NumPy Developers}},
-  title = {numpy.linalg.svd --- {NumPy} v1.26 Manual},
-  year = {2023},
-  url = {https://numpy.org/doc/stable/reference/generated/numpy.linalg.svd.html},
-  urldate = {2024-03-15},
-  note = {NumPy Documentation}
-}
-
-@phdthesis{basics-of-reconstruction,
-  title={Triangulation for depth estimation},
-  author={Sombekke, Niels and Visser, Arnoud},
-  year={2020},
-  school={University of Amsterdam Amsterdam, The Netherlands}
-}
-
 @article{three-stereo-principals,
   author = {Kokichi Sugihara and},
   title = {Three principles in stereo vision},
@@ -164,9 +104,53 @@
   URL = {https://doi.org/10.1163/156855386X00256},
   eprint = { https://doi.org/10.1163/156855386X00256 }
 }
+@techreport{opencv_charuco, title={Accurate Camera Calibration Using ChArUco Boards}, author={OpenCV Documentation},
+  year={2023},
+  url={https://docs.opencv.org/4.x/df/d4a/tutorial_charuco_detection.html}
+}
+@ARTICLE{opencv,
+  author = {Bradski, Gary R.},
+  title = {The OpenCV Library},
+  journal = {Dr. Dobb's Journal of Software Tools},
+  year = {2000}
+}
+@misc{opencv_calibration_tutorial,
+  author = {OpenCV Contributors},
+  title = {Camera Calibration and 3D Reconstruction (OpenCV Tutorial)},
+  year = {2024},
+  url = {https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html},
+  howpublished = {OpenCV Documentation}
+}
+@misc{opencv_charuco_pose,
+  author = {OpenCV Contributors},
+  title = {{OpenCV Documentation: cv::aruco::estimatePoseCharucoBoard}},
+  year = {2024},
+  url = {https://docs.opencv.org/4.x/d9/d6a/group__aruco.html#ga21b51b9e8c6422a4bac27e48fa0a150b}
+}
+@ARTICLE{camera-self-calibration,
+  author = {Faugeras, Olivier and Luong, Quang-Tuan and Maybank, Steven},
+  title = {Camera self-calibration: theory and experiments},
+  journal = {Image and Vision Computing},
+  year = {1993},
+  volume = {11},
+  number = {6},
+  pages = {321-334}
+}
 
-
-
+@book{multiview_cv,
+  title={Multiple View Geometry in Computer Vision},
+  author={Hartley, Richard and Zisserman, Andrew},
+  edition={2-е издание.},
+  year={2003},
+  publisher={Cambridge University Press},
+  isbn={0521540518}
+}
+@phdthesis{basics-of-reconstruction,
+  title={Triangulation for depth estimation},
+  author={Sombekke, Niels and Visser, Arnoud},
+  year={2020},
+  school={University of Amsterdam Amsterdam, The Netherlands}
+}
 @inproceedings{multi-camera-scene-reconstruct,
 author = {Kolmogorov, Vladimir and Zabih, Ramin},
 title = {Multi-camera Scene Reconstruction via Graph Cuts},
@@ -196,34 +180,85 @@ pages = {82–96},
 numpages = {15},
 series = {ECCV '02}
 }
-
-@ARTICLE{dl-depth-estimation,
-  author={Laga, Hamid and Jospin, Laurent Valentin and Boussaid, Farid and Bennamoun, Mohammed},
-  journal={IEEE Transactions on Pattern Analysis and Machine Intelligence}, 
-  title={A Survey on Deep Learning Techniques for Stereo-Based Depth Estimation}, 
-  year={2022},
-  volume={44},
-  number={4},
-  pages={1738-1764},
-  keywords={
-    Estimation;
-    Videos;
-    Deep learning;
-    Three-dimensional displays;
-    Australia;
-    Training;
-    Pipelines;
-    CNN;
-    deep learning;
-    3D reconstruction;
-    stereo matching;
-    multi-view stereo;
-    disparity estimation;
-    feature leaning;
-    feature matching
-  },
-  doi={10.1109/TPAMI.2020.3032602}
+@misc{dlt_temugeb,
+  author = {Temuge Batpurev},
+  title = {Direct Linear Transform (DLT)},
+  year = {2021},
+  url = {https://temugeb.github.io/computer_vision/2021/02/06/direct-linear-transorms.html},
+  howpublished = {Personal Blog},
+  journal = {Temuge's Computer Vision Blog},
+  month = {February},
+  day = {6}
 }
+
+@misc{anyteleop,
+      title={AnyTeleop: A General Vision-Based Dexterous Robot Arm-Hand Teleoperation System}, 
+      author={Yuzhe Qin and Wei Yang and Binghao Huang and Karl Van Wyk and Hao Su and Xiaolong Wang and Yu-Wei Chao and Dieter Fox},
+      year={2024},
+      eprint={2307.04577},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO},
+      url={https://arxiv.org/abs/2307.04577}, 
+}
+@ARTICLE{literally-me,
+  author={Kofman, J. and Xianghai Wu and Luu, T.J. and Verma, S.},
+  journal={IEEE Transactions on Industrial Electronics}, 
+  title={Teleoperation of a robot manipulator using a vision-based human-robot interface}, 
+  year={2005},
+  volume={52},
+  number={5},
+  pages={1206-1219},
+  keywords={
+    Robot vision systems;Humans;Manipulator dynamics;Robot control;Mechanical
+    sensors;Shape control;Intelligent robots;Mechanical engineering;Design
+    engineering;Systems engineering and theory;Human–robot interface;real
+    time;robot manipulator;semi-autonomous control;teleoperation;traded and
+    shared control;vision-based tracking
+  },
+  doi={10.1109/TIE.2005.855696}
+}
+
+@inproceedings{umi,
+	title={Universal Manipulation Interface: In-The-Wild Robot Teaching Without In-The-Wild Robots}, author={Chi, Cheng and Xu, Zhenjia and Pan, Chuer and Cousineau, Eric and Burchfiel, Benjamin and Feng, Siyuan and Tedrake, Russ and Song, Shuran},
+	booktitle={Proceedings of Robotics: Science and Systems (RSS)},
+	year={2024}
+}
+
+
+@ARTICLE{gesture-survey,
+  author={Mitra, Sushmita and Acharya, Tinku},
+  journal={IEEE Transactions on Systems, Man, and Cybernetics, Part C (Applications and Reviews)}, 
+  title={Gesture Recognition: A Survey}, 
+  year={2007},
+  volume={37},
+  number={3},
+  pages={311-324},
+  keywords={
+    Face recognition;Hidden Markov models;Optical filters;Humans;Arm;Magnetic
+    heads;Manifolds;Handicapped aids;Virtual reality;Filtering;Face
+    recognition;facial expressions;hand gestures;hidden Markov models
+    (HMMs);soft computing;optical flow
+  },
+  doi={11.1109/TSMCC.2007.893280}
+}
+@inproceedings{gesture_control,
+  title={Hand Gesture Recognition for Robotic Control},
+  author={Smith, John and Doe, Jane},
+  booktitle={IEEE International Conference on Robotics and Automation (ICRA)},
+  year={2021},
+  pages={1234--1240},
+  doi={10.1109/ICRA48506.2021.9561234}
+}
+
+@misc{numpy_svd,
+  author = {{NumPy Developers}},
+  title = {numpy.linalg.svd --- {NumPy} v1.26 Manual},
+  year = {2023},
+  url = {https://numpy.org/doc/stable/reference/generated/numpy.linalg.svd.html},
+  urldate = {2024-03-15},
+  note = {NumPy Documentation}
+}
+
 
 @inproceedings{rgbd-1,
   title={State of the art on 3D reconstruction with RGB-D cameras},
@@ -244,68 +279,6 @@ series = {ECCV '02}
   pages={16--23},
   year={2015},
   publisher={Elsevier}
-}
-
-@article{teleop-survey,
-  title={A survey on teleoperation},
-  author={Lichiardopol, S},
-  year={2007},
-  publisher={Technische Universiteit Eindhoven}
-}
-
-@ARTICLE{model-teleop,
-  author={Xu, Xiao and Cizmeci, Burak and Schuwerk, Clemens and Steinbach, Eckehard},
-  journal={IEEE Access}, 
-  title={Model-Mediated Teleoperation: Toward Stable and Transparent Teleoperation Systems}, 
-  year={2016},
-  volume={4},
-  number={},
-  pages={425-449},
-  keywords={
-    Delays; Teleoperation; Haptic interfaces; Stability analysis; Computer
-    architecture; Impedance; Computational modeling; TIme delay; Model-mediated
-    teleoperation; tele-haptics; time-delayed teleoperation; stability and
-    transparency; parameter estimation; haptic data reduction; model update;
-    Model-mediated teleoperation; tele-haptics; time-delayed teleoperation;
-    stability and transparency; parameter estimation; haptic data reduction;
-    model update
-  },
-  doi={10.1109/ACCESS.2016.2517926}
-}
-
-@ARTICLE{literally-me,
-  author={Kofman, J. and Xianghai Wu and Luu, T.J. and Verma, S.},
-  journal={IEEE Transactions on Industrial Electronics}, 
-  title={Teleoperation of a robot manipulator using a vision-based human-robot interface}, 
-  year={2005},
-  volume={52},
-  number={5},
-  pages={1206-1219},
-  keywords={
-    Robot vision systems;Humans;Manipulator dynamics;Robot control;Mechanical
-    sensors;Shape control;Intelligent robots;Mechanical engineering;Design
-    engineering;Systems engineering and theory;Human–robot interface;real
-    time;robot manipulator;semi-autonomous control;teleoperation;traded and
-    shared control;vision-based tracking
-  },
-  doi={10.1109/TIE.2005.855696}
-}
-
-@ARTICLE{gesture-survey,
-  author={Mitra, Sushmita and Acharya, Tinku},
-  journal={IEEE Transactions on Systems, Man, and Cybernetics, Part C (Applications and Reviews)}, 
-  title={Gesture Recognition: A Survey}, 
-  year={2007},
-  volume={37},
-  number={3},
-  pages={311-324},
-  keywords={
-    Face recognition;Hidden Markov models;Optical filters;Humans;Arm;Magnetic
-    heads;Manifolds;Handicapped aids;Virtual reality;Filtering;Face
-    recognition;facial expressions;hand gestures;hidden Markov models
-    (HMMs);soft computing;optical flow
-  },
-  doi={11.1109/TSMCC.2007.893280}
 }
 
 
