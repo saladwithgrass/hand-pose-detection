@@ -108,7 +108,7 @@ def draw_hand_on_image(
                 thickness=2
             )
 
-def visualize_basic_gripper(image, detection_result):
+def visualize_basic_gripper(image, detection_result, draw_names:bool=False):
     if len(detection_result) < 8:
         return
     index_points = np.array([detection_result[5], detection_result[8]], int)
@@ -185,6 +185,8 @@ def visualize_basic_gripper(image, detection_result):
         radius=10,
         thickness=-1
     )
+    if not draw_names:
+        return
     draw_text(
         img=image,
         text='B',
