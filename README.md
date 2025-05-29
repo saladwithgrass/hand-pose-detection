@@ -1,5 +1,5 @@
 # IMPORTANT
-If you use wayland, be wary of opencv being somewhat fucky. In my case it was fixed with 
+If you use wayland, be wary of opencv being somewhat weird. In my case it was fixed with 
 `$ export QT_QPA_PLATFORM=xcb`
 
 # Part 1: Pose Detection Module
@@ -68,8 +68,6 @@ For start i will try to track the position of charuco board and see where it get
     All i need to do for triangulation is solve a system for two projection matrices. Just easy math.
 
         
-АХАХАХАХАХАХАХ Я НАШЕЛ ЕБАНУЮ ОШИБКУ, ЩА КАК СДЕЛАЮ ТРИАНГУЛЯЦИЮ И ОНА ЗАРАБОТАЕТ АХАХАХАХАХА
-
 3) Triangulate hand
 
 ## Conclustion to Part 1
