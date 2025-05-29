@@ -177,6 +177,7 @@ def create_triangulator_from_files(
     if len(extrinsics) == 0:
         extrinsics = None
 
+    print(tvecs)
     # create and return triangulator
     return CameraTriangulator(
         camera_matrices=cam_matrices,

@@ -108,11 +108,130 @@ def draw_hand_on_image(
                 thickness=2
             )
 
-def draw_text(img:np.ndarray, text:str):
+def visualize_basic_gripper(image, detection_result):
+    if len(detection_result) < 8:
+        return
+    index_points = np.array([detection_result[5], detection_result[8]], int)
+    thumb_points = np.array([detection_result[2], detection_result[4]], int)
+    begin_center = ((index_points[0] + thumb_points[0]) / 2).astype(int)
+    end_center = ((index_points[1] + thumb_points[1]) / 2).astype(int)
+    print(begin_center.dtype)
+    # draw midpoints
+    cv2.circle(
+        image,
+        center=begin_center,
+        color=(255, 0, 0),
+        radius=10,
+        thickness=-1
+    )
+    cv2.circle(
+        image,
+        center=end_center,
+        color=(255, 0, 0),
+        radius=10,
+        thickness=-1
+    )
+    # draw gripper fingers
+    cv2.line(
+        image,
+        begin_center,
+        index_points[1],
+        color=(255, 200, 200),
+        thickness=3
+    )
+    cv2.line(
+        image,
+        begin_center,
+        thumb_points[1],
+        color=(255, 200, 200),
+        thickness=3
+    )
+
+    cv2.line(
+        image,
+        end_center,
+        begin_center,
+        color=(255, 0, 0),
+        thickness=5
+    )
+
+    # draw index points
+    cv2.circle(
+        image,
+        center=index_points[0],
+        color=(0, 0, 255),
+        radius=10,
+        thickness=-1
+    )
+    cv2.circle(
+        image,
+        center=index_points[1],
+        color=(0, 0, 255),
+        radius=10,
+        thickness=-1
+    )
+    # draw thumb
+    cv2.circle(
+        image,
+        center=thumb_points[0],
+        color=(0, 255, 0),
+        radius=10,
+        thickness=-1
+    )
+    cv2.circle(
+        image,
+        center=thumb_points[1],
+        color=(0, 255, 0),
+        radius=10,
+        thickness=-1
+    )
+    draw_text(
+        img=image,
+        text='B',
+        fontColor=(255, 255, 255),
+        bottomLeftCornerOfText=begin_center
+    )
+    draw_text(
+        img=image,
+        text='E',
+        fontColor=(255, 255, 255),
+        bottomLeftCornerOfText=end_center
+    )
+    draw_text(
+        img=image,
+        text='Ib',
+        fontColor=(255, 255, 255),
+        bottomLeftCornerOfText=index_points[0]
+    )
+    draw_text(
+        img=image,
+        text='Ie',
+        fontColor=(255, 255, 255),
+        bottomLeftCornerOfText=index_points[1]
+    )
+    draw_text(
+        img=image,
+        text='Tb',
+        fontColor=(255, 255, 255),
+        bottomLeftCornerOfText=thumb_points[0]
+    )
+    draw_text(
+        img=image,
+        text='Te',
+        fontColor=(255, 255, 255),
+        bottomLeftCornerOfText=thumb_points[1]
+    )
+
+def draw_text(
+    img:np.ndarray, 
+    text:str, 
+    fontColor=(0,255,0),
+    bottomLeftCornerOfText=None,
+    fontScale=2,
+):
     font                   = cv2.FONT_HERSHEY_SIMPLEX
-    bottomLeftCornerOfText = (10, img.shape[0] - 10)
-    fontScale              = 2
-    fontColor              = (0,255,0)
+    if bottomLeftCornerOfText is None:
+        bottomLeftCornerOfText = (10, img.shape[0] - 10)
     thickness              = 3
     lineType               = 2
     

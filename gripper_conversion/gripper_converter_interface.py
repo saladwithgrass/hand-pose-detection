@@ -7,7 +7,8 @@ def normalize(vector):
         return vector
     return vector / norm
 
-class DummyGripperConverter():
+# SECTION INIT BEGIN
+class GripperConverterInterface():
     """
     Used to determine the orientation and position of the end effector.
     """
@@ -16,7 +17,9 @@ class DummyGripperConverter():
         # load conections with their names
         with open(path_to_connections_json, 'r') as input_file:
             self.named_connections = json.load(input_file) 
+# SECTION INIT END
 
+# SECTION STATE BEGIN
     def get_gripper_state(self, points3d):
         """
         Args:
@@ -28,5 +31,10 @@ class DummyGripperConverter():
             translation:np.ndarray - a vector representing the position of the end-effector.
 
             grip:float - distance between gripper's fingers
+        Returns:
+            list[np.ndarray] - orientation axes
+            np.ndarray - gripper position
+            flaot - degree of closing?
         """
-        return None, None, None
+        return [np.zeros(3), np.zeros(3), np.zeros(3)], np.ndarray([]), 0.
+# SECTION STATE END

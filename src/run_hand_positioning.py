@@ -1,3 +1,4 @@
+from os import error
 import cv2
 import argparse
 from time import time
@@ -7,8 +8,10 @@ from utils.visualizer_3d import Visualizer3D
 from utils.file_utils import create_capture_from_json
 from positioning.triangulator import create_triangulator_from_files
 from detection.capture_detector import CaptureDetector
-from utils.draw_utils import draw_hand_on_image
-from gripper_conversion.dummy_gripper_converter import TestGripperConverter as GripperConverter
+from utils.draw_utils import draw_hand_on_image, visualize_basic_gripper
+# from gripper_conversion.test_gripper_converter import TestGripperConverter as GripperConverter
+from gripper_conversion.basic_gripper_converter import BasicGripperConverter as GripperConverter
+
 
 # SECTION CAM_IDS BEGIN
 def parse_args():
@@ -73,6 +76,12 @@ def parse_args():
     )
 # SECTION ARGS_VIDEO END
 
+    parser.add_argument(
+            '--distance',
+            '-d',
+            help='actaul distance between fingers',
+            type=float
+    )
 # SECTION ARGS_HANDS BEGIN
     parser.add_argument(
         '-sh',
@@ -96,6 +105,10 @@ def main():
     scale = args.display_scale
     show_hands = args.show_hands
 # SECTION SAVE_ARGS END
+    error_squared = 0.
+    index_pos = 0
+    n_measurements = 0
+    actual_distance = args.distance
 
 # SECTION DET_CAPS BEGIN
     # create captures
@@ -108,6 +121,8 @@ def main():
     for cap in caps:
         detectors.append(CaptureDetector(cap, 'detection/hand_landmarker.task')) 
 # SECTION DET_CAPS END
+
+    distance = 0
 
 # SECTION TRI_CREATE BEGIN
     # create triangulator
@@ -126,7 +141,7 @@ def main():
 # SECTION GRIP_CONV BEGIN
     # create converter to gripper
     gripper_converter = GripperConverter('config/hand_connections.json')
-    gripper_converter.set_orientation_index_z()
+
 # SECTION GRIP_CONV END
 
 # SECTION INIT BEGIN
@@ -170,6 +185,8 @@ def main():
         points3d = []
         for point1, point2 in zip(camera_points[0], camera_points[1]):
             points3d.append(triangulator.triangulate([point1, point2]))
+        if len(points3d) > 8:
+            index_pos = points3d[8]
 # SECTION RUN_TRI END
 
 # SECTION GET_ORIENT BEGIN
@@ -177,7 +194,7 @@ def main():
         axes_center = None
         if len(points3d) != 0:
             # run gripper conversion
-            axes, axes_center = gripper_converter.get_orientation_index_z(points3d=points3d)
+            axes, axes_center, distance = gripper_converter.get_gripper_state(points3d=points3d)
 # SECTION GET_ORIENT END
 
 # SECTION UPDATE_VIZ BEGIN
@@ -201,11 +218,12 @@ def main():
                     length=100,
                     thickness=10
                 )
-                # draw hand
-                draw_hand_on_image(
-                    frames[cam_idx], 
-                    camera_points[cam_idx]
-                    )
+                visualize_basic_gripper(frames[cam_idx], camera_points[cam_idx])
+                # # draw hand
+                # draw_hand_on_image(
+                #     frames[cam_idx], 
+                #     camera_points[cam_idx]
+                #     )
                 # scale image and display it 
                 cv2.imshow(
                     f'huh{cam_idx}',
@@ -218,17 +236,28 @@ def main():
 
 # SECTION TIME BEGIN
         end_time = time()
-        print('FPS: ', 1/ (end_time - start_time))
+        print('FPS: ', 1/ (end_time - start_time), end=' ')
+        print('Gripper Distance: ', distance)
+        print('index pos: ', index_pos)
         # wait and lsiten for exit
         if cv2.waitKey(1) == 27:
             break
 # SECTION TIME END
+        if actual_distance is None:
+            continue
+        tolerance = 25.0 # mm
+        error = distance - actual_distance
+        if abs(error) < tolerance:
+            error_squared += error*error
+            n_measurements += 1
     
 # SECTION FINISH BEGIN
     for cap in caps:
         cap.release()
     cv2.destroyAllWindows()
 # SECTION FINISH END
+    print('RMSE: ', np.sqrt(error_squared / n_measurements))
+    print('n_measurements: ', n_measurements)
 
 if __name__ == '__main__':
     main()
