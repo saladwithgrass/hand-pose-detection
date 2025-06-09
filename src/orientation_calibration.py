@@ -20,7 +20,7 @@ def save(input_sources, rvecs, tvecs, extrinsics, separate, output):
     print('Saving data for cameras', end='')
     if separate:
         print(' separately.')
-        prefix = output
+        prefix = output.removesuffix('.pkl')
         prefix.removesuffix('.pkl')
         for idx in range(len(input_sources)):
             cur_name = prefix + f'_{input_sources[idx]}.pkl'
@@ -41,8 +41,7 @@ def save(input_sources, rvecs, tvecs, extrinsics, separate, output):
             'extrinsics' : extrinsics,
             'cam_ids' : input_sources
         }
-        output_name = output
-        output_name.removesuffix('pkl')
+        output_name = output.removesuffix('.pkl')
         output_name = output_name + '.pkl'
         with open(output_name, 'wb') as output:
             pickle.dump(data_struct, output)
